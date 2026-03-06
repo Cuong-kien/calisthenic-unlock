@@ -3,8 +3,6 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
-    @State private var navigateToTraining = false
-
     private var progressManager: ProgressManager {
         ProgressManager(modelContext: modelContext)
     }
@@ -17,78 +15,200 @@ struct HomeView: View {
         progressManager.completedSessionCount(for: currentLevel)
     }
 
-    private var progress: Double {
-        Double(sessionsCompleted) / Double(Level.sessionsToUnlock)
+    // MARK: - Greeting
+
+    private var greetingText: String {
+        let hour = Calendar.current.component(.hour, from: Date())
+        if hour < 12 { return "Good morning" }
+        if hour < 18 { return "Good afternoon" }
+        return "Good evening"
+    }
+
+    private var dateText: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE, dd MMMM"
+        return formatter.string(from: Date())
+    }
+
+    // MARK: - Stats
+
+    private var dayCount: Int {
+        progressManager.dayCount()
+    }
+
+    private var startDateText: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMM yyyy"
+        return formatter.string(from: progressManager.startDate())
+    }
+
+    private var totalTimeText: String {
+        let total = progressManager.totalTrainingTime()
+        let hours = Int(total) / 3600
+        let minutes = (Int(total) % 3600) / 60
+        return "\(hours)h \(minutes)m"
+    }
+
+    private var overallProgress: Double {
+        progressManager.overallProgress()
     }
 
     var body: some View {
-        NavigationStack {
-            VStack(spacing: 30) {
-                Spacer()
-
-                // Level badge
-                VStack(spacing: 12) {
-                    Image(systemName: currentLevel.iconName)
-                        .font(.system(size: 50))
-                        .foregroundStyle(currentLevel.color)
-
-                    Text(currentLevel.displayName)
-                        .font(.title)
-                        .fontWeight(.bold)
-
-                    Text("Current Level")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                }
-
-                // Progress ring
-                ZStack {
-                    Circle()
-                        .stroke(Color.gray.opacity(0.2), lineWidth: 12)
-                        .frame(width: 150, height: 150)
-
-                    Circle()
-                        .trim(from: 0, to: min(progress, 1.0))
-                        .stroke(currentLevel.color, style: StrokeStyle(lineWidth: 12, lineCap: .round))
-                        .frame(width: 150, height: 150)
-                        .rotationEffect(.degrees(-90))
-                        .animation(.easeInOut, value: progress)
-
-                    VStack(spacing: 4) {
-                        Text("\(sessionsCompleted)/\(Level.sessionsToUnlock)")
-                            .font(.title)
-                            .fontWeight(.bold)
-                        Text("Sessions")
-                            .font(.caption)
+        ScrollView {
+            VStack(spacing: 20) {
+                // Greeting header
+                HStack {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(dateText)
+                            .font(.system(size: 13))
                             .foregroundStyle(.secondary)
+                        Text(greetingText)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .foregroundStyle(.primary)
                     }
+                    Spacer()
+                    Image(systemName: "flame.fill")
+                        .font(.title2)
+                        .foregroundStyle(.orange)
                 }
+                .padding(.horizontal)
 
-                // Start training button
-                NavigationLink {
-                    TrainingView(level: currentLevel)
-                } label: {
-                    Label("Start Training", systemImage: "play.fill")
-                        .font(.headline)
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(currentLevel.color)
-                        .clipShape(RoundedRectangle(cornerRadius: 16))
-                }
-                .padding(.horizontal, 40)
+                // Stats cards
+                statsCards
+
+                // Level card
+                levelCard
 
                 if sessionsCompleted >= Level.sessionsToUnlock {
                     Text("Level complete! Move to \(currentLevel.displayName) exercises or advance.")
-                        .font(.caption)
+                        .font(.system(size: 13))
                         .foregroundStyle(.secondary)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal)
                 }
+            }
+            .padding(.vertical)
+        }
+        .toolbar(.hidden, for: .navigationBar)
+    }
+
+    // MARK: - Stats Cards
+
+    private var statsCards: some View {
+        HStack(spacing: 12) {
+            // Left: Day card (tall)
+            VStack(alignment: .leading) {
+                Text("Day \(dayCount)")
+                    .font(.title)
+                    .fontWeight(.bold)
 
                 Spacer()
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("Start at")
+                        .font(.system(size: 13))
+                        .foregroundStyle(.secondary)
+                    Text(startDateText)
+                        .font(.subheadline)
+                        .fontWeight(.semibold)
+                }
             }
-            .navigationTitle("Planche Fitness")
+            .padding()
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(Color(.systemGray6))
+            .clipShape(RoundedRectangle(cornerRadius: 16))
+
+            // Right: Two stacked cards
+            VStack(spacing: 12) {
+                // Total time card
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(totalTimeText)
+                        .font(.title2)
+                        .fontWeight(.bold)
+                    Text("Total time training")
+                        .font(.system(size: 13))
+                        .foregroundStyle(.secondary)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+
+                // Progress card
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack {
+                        Text("\(Int(overallProgress))%")
+                            .font(.title2)
+                            .fontWeight(.bold)
+                        Spacer()
+                        Text("Progress")
+                            .font(.system(size: 13))
+                            .foregroundStyle(.secondary)
+                    }
+                    ProgressView(value: min(overallProgress / 100, 1.0))
+                        .tint(.blue)
+                }
+                .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .background(Color(.systemGray6))
+                .clipShape(RoundedRectangle(cornerRadius: 16))
+            }
         }
+        .padding(.horizontal)
+    }
+
+    // MARK: - Level Card
+
+    private var levelCard: some View {
+        ZStack {
+            // Background gradient
+            LinearGradient(
+                colors: [currentLevel.color.opacity(1.0), currentLevel.color.opacity(1.0)],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            // Content
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Level \(currentLevel.order)")
+                    .font(.system(size: 13))
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.white.opacity(0.8))
+
+                Text(currentLevel.displayName.uppercased())
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.white)
+
+                Text("\(sessionsCompleted)/\(Level.sessionsToUnlock) sessions")
+                    .font(.system(size: 13))
+                    .foregroundStyle(.white.opacity(0.7))
+
+                Text(currentLevel.description)
+                    .font(.subheadline)
+                    .foregroundStyle(.white.opacity(0.8))
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+
+                NavigationLink(value: AppRoute.levelDetail(currentLevel, isUnlocked: true)) {
+                    Text("Start Training")
+                        .font(.headline)
+                        .foregroundStyle(.black)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(.white)
+                        .clipShape(RoundedRectangle(cornerRadius: 12))
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(20)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .overlay(
+            RoundedRectangle(cornerRadius: 20)
+                .strokeBorder(Color.white.opacity(0.1), lineWidth: 1)
+        )
+        .padding(.horizontal)
     }
 }

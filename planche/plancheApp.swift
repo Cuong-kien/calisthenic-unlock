@@ -7,8 +7,13 @@ struct plancheApp: App {
         let schema = Schema([
             TrainingSession.self,
             UserProgress.self,
+            ExerciseCustomization.self,
         ])
-        let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
+        let modelConfiguration = ModelConfiguration(
+            schema: schema,
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: .none
+        )
 
         do {
             return try ModelContainer(for: schema, configurations: [modelConfiguration])
@@ -20,6 +25,7 @@ struct plancheApp: App {
     var body: some Scene {
         WindowGroup {
             MainTabView()
+                .preferredColorScheme(.dark)
         }
         .modelContainer(sharedModelContainer)
     }
