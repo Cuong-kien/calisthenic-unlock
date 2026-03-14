@@ -1,0 +1,12 @@
+# Xcode
+*.xcuserstate
+xcuserdata/
+*.xcworkspace/xcuserdata/
+DerivedData/
+.build/
+
+# macOS
+.DS_Store
+
+# Wireframe / design reference images (not part of the app build)
+wireframe/

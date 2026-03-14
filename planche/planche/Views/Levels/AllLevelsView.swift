@@ -1,0 +1,186 @@
+import SwiftUI
+import SwiftData
+
+struct AllLevelsView: View {
+    @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var storeManager: StoreManager
+    @EnvironmentObject private var navigationState: NavigationState
+    @Query private var activePrograms: [ActiveProgram]
+    @State private var showPaywall = false
+    @State private var previewSkill: Skill? = nil
+
+    private var progressManager: ProgressManager {
+        ProgressManager(modelContext: modelContext)
+    }
+
+    private var activeSkillID: String? {
+        activePrograms.first?.skillID
+    }
+
+    private var completedSkillIDs: Set<String> {
+        Set(activePrograms.filter { $0.isCompleted }.map { $0.skillID })
+    }
+
+    /// Skills sorted with the active (starred) skill pinned to the top
+    private var sortedSkills: [Skill] {
+        let all = SkillCatalog.shared.allSkills()
+        guard let activeID = activeSkillID else { return all }
+        var sorted = all.filter { $0.id != activeID }
+        if let active = all.first(where: { $0.id == activeID }) {
+            sorted.insert(active, at: 0)
+        }
+        return sorted
+    }
+
+    private var hasIncompleteActiveProgram: Bool {
+        guard let program = activePrograms.first else { return false }
+        return !program.isCompleted
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 0) {
+                Text("Process")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .foregroundStyle(.primary)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 4)
+                    .padding(.bottom, 4)
+
+                VStack(spacing: 16) {
+                    ForEach(sortedSkills) { skill in
+                        let isPremiumLocked = skill.requiresSubscription && !storeManager.isSubscribed
+                        let isActive = skill.id == activeSkillID
+
+                        let isCompleted = completedSkillIDs.contains(skill.id)
+
+                        if isPremiumLocked {
+                            Button {
+                                showPaywall = true
+                            } label: {
+                                SkillRow(skill: skill, isPremiumLocked: true, isActive: false, isCompleted: false)
+                            }
+                            .buttonStyle(.plain)
+                            .background(Color(.secondarySystemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                        } else {
+                            Button {
+                                handleSkillTap(skill: skill)
+                            } label: {
+                                SkillRow(skill: skill, isPremiumLocked: false, isActive: isActive, isCompleted: isCompleted)
+                            }
+                            .buttonStyle(.plain)
+                            .background(Color(.secondarySystemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                        }
+                    }
+                }
+                .padding(.horizontal, 16)
+            }
+            .padding(.bottom, 100)
+        }
+        .background(Color(.systemBackground))
+        .toolbar(.hidden, for: .navigationBar)
+        .sheet(isPresented: $showPaywall) {
+            PaywallView()
+                .environmentObject(storeManager)
+        }
+        .fullScreenCover(item: $previewSkill) { skill in
+            SkillPreviewOverlay(
+                skill: skill,
+                onSelect: { selectedSkill in
+                    previewSkill = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        navigationState.processRoute = .skillDetail(selectedSkill)
+                    }
+                },
+                onDismiss: {
+                    previewSkill = nil
+                }
+            )
+        }
+    }
+
+    private func handleSkillTap(skill: Skill) {
+        if hasIncompleteActiveProgram && skill.id == activeSkillID {
+            navigationState.processRoute = .skillDetail(skill)
+        } else {
+            previewSkill = skill
+        }
+    }
+}
+
+private struct SkillRow: View {
+    let skill: Skill
+    let isPremiumLocked: Bool
+    let isActive: Bool
+    let isCompleted: Bool
+
+    var body: some View {
+        HStack(spacing: 16) {
+            SkillIcon(skill: skill, isActive: !isPremiumLocked)
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(skill.categoryLabel)
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(.secondary)
+                    .tracking(0.5)
+
+                Text(skill.displayName)
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(isPremiumLocked ? .secondary : .primary)
+            }
+
+            Spacer()
+
+            if isPremiumLocked {
+                Image(systemName: "crown.fill")
+                    .font(.system(size: 16))
+                    .foregroundStyle(Color.yellow)
+            } else if isCompleted {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 22))
+                    .foregroundStyle(Color.blue)
+            } else if isActive {
+                Image(systemName: "star.fill")
+                    .font(.system(size: 20))
+                    .foregroundStyle(Color.yellow)
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.vertical, 14)
+        .contentShape(Rectangle())
+    }
+}
+
+private struct SkillIcon: View {
+    let skill: Skill
+    let isActive: Bool
+
+    var body: some View {
+        let imageName = skill.skillIconImageName(active: isActive)
+
+        Group {
+            if let imageName {
+                Image(imageName)
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 72, height: 72)
+            } else {
+                ZStack {
+                    Image(systemName: "hexagon.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(isActive ? Color.trainingBlue : Color(.systemGray4))
+                        .frame(width: 72, height: 72)
+
+                    Image(systemName: skill.iconName)
+                        .font(.system(size: 22, weight: .medium))
+                        .foregroundStyle(.white)
+                }
+            }
+        }
+    }
+}

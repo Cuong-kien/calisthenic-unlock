@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skill Preview Overlay - Planche App</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    gap: 40px;
+    padding: 40px;
+  }
+
+  .phone-frame {
+    width: 393px;
+    height: 852px;
+    background: #FFFFFF;
+    border-radius: 48px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 25px 80px rgba(0,0,0,0.5);
+    flex-shrink: 0;
+  }
+
+  .phone-frame.dark {
+    background: #1C1C1E;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 32px 8px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .phone-frame.dark .status-bar { color: #fff; }
+  .phone-frame:not(.dark) .status-bar { color: #000; }
+  .status-icons { display: flex; gap: 6px; align-items: center; }
+  .status-icons svg { width: 18px; height: 18px; }
+
+  /* Close button */
+  .close-btn {
+    position: absolute;
+    top: 56px;
+    right: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .phone-frame:not(.dark) .close-btn {
+    background: rgba(0,0,0,0.08);
+    color: #8E8E93;
+  }
+  .phone-frame.dark .close-btn {
+    background: rgba(255,255,255,0.12);
+    color: #8E8E93;
+  }
+  .close-btn svg { width: 16px; height: 16px; }
+
+  /* Content */
+  .content {
+    padding: 0 24px;
+    overflow-y: auto;
+    height: calc(100% - 50px - 160px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 24px;
+  }
+
+  /* Skill Icon */
+  .skill-icon {
+    width: 120px;
+    height: 120px;
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .skill-icon .hexagon {
+    width: 120px;
+    height: 120px;
+  }
+  .skill-icon .icon-inner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: #fff;
+  }
+
+  /* Category label */
+  .category-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .phone-frame:not(.dark) .category-label { color: #8E8E93; }
+  .phone-frame.dark .category-label { color: #8E8E93; }
+
+  /* Title */
+  .skill-title {
+    font-size: 34px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .phone-frame:not(.dark) .skill-title { color: #000; }
+  .phone-frame.dark .skill-title { color: #fff; }
+
+  /* Description */
+  .skill-description {
+    font-size: 15px;
+    line-height: 1.4;
+    text-align: center;
+    padding: 0 16px;
+    margin-bottom: 20px;
+  }
+  .phone-frame:not(.dark) .skill-description { color: #8E8E93; }
+  .phone-frame.dark .skill-description { color: #8E8E93; }
+
+  /* Difficulty */
+  .difficulty-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .difficulty-label {
+    font-size: 15px;
+  }
+  .phone-frame:not(.dark) .difficulty-label { color: #8E8E93; }
+  .phone-frame.dark .difficulty-label { color: #8E8E93; }
+  .stars { display: flex; gap: 3px; }
+  .star { font-size: 14px; color: #FFD60A; }
+  .star.empty { opacity: 0.3; }
+
+  /* Info card */
+  .info-card {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .phone-frame:not(.dark) .info-card { background: #F2F2F7; }
+  .phone-frame.dark .info-card { background: #2C2C2E; }
+  .info-card-title {
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .phone-frame:not(.dark) .info-card-title { color: #8E8E93; }
+  .phone-frame.dark .info-card-title { color: #8E8E93; }
+  .info-card-value {
+    font-size: 20px;
+    font-weight: 700;
+  }
+  .phone-frame:not(.dark) .info-card-value { color: #000; }
+  .phone-frame.dark .info-card-value { color: #fff; }
+
+  /* Requirements */
+  .requirements {
+    width: 100%;
+    padding: 0 8px;
+    margin-bottom: 24px;
+  }
+  .requirements-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 12px;
+  }
+  .phone-frame:not(.dark) .requirements-title { color: #000; }
+  .phone-frame.dark .requirements-title { color: #fff; }
+  .req-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+  .req-check {
+    color: #035CD5;
+    font-size: 14px;
+    margin-top: 1px;
+    flex-shrink: 0;
+  }
+  .req-text {
+    font-size: 15px;
+    line-height: 1.4;
+  }
+  .phone-frame:not(.dark) .req-text { color: #8E8E93; }
+  .phone-frame.dark .req-text { color: #8E8E93; }
+
+  /* Bottom buttons */
+  .bottom-actions {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px 20px 40px;
+  }
+  .phone-frame:not(.dark) .bottom-actions {
+    background: linear-gradient(to top, #FFFFFF 60%, transparent);
+  }
+  .phone-frame.dark .bottom-actions {
+    background: linear-gradient(to top, #1C1C1E 60%, transparent);
+  }
+
+  .btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: 14px;
+    font-size: 17px;
+    font-weight: 600;
+    border: none;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+  }
+  .btn-primary {
+    background: #007AFF;
+    color: #fff;
+    margin-bottom: 12px;
+  }
+  .btn-secondary {
+    color: #007AFF;
+  }
+  .phone-frame:not(.dark) .btn-secondary { background: #E5E5EA; }
+  .phone-frame.dark .btn-secondary { background: #3A3A3C; }
+
+  /* Label */
+  .frame-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 16px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0.6;
+  }
+
+  /* SVG hexagon colors */
+  .hex-fill-blue { fill: #035CD5; }
+</style>
+</head>
+<body>
+
+<!-- ========== SCREEN 1: Recommended (with soft warning) — Light ========== -->
+<div>
+  <div class="phone-frame">
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <svg viewBox="0 0 18 12"><path d="M1 4.5C3.5 1.5 7 0 9 0s5.5 1.5 8 4.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M4 7.5C5.5 5.5 7 4.5 9 4.5s3.5 1 5 3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="9" cy="10.5" r="1.5" fill="currentColor"/></svg>
+        <svg viewBox="0 0 18 12"><rect x="1" y="1" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.2" fill="none"/><rect x="3" y="3" width="10" height="6" rx="1" fill="currentColor"/></svg>
+      </div>
+    </div>
+
+    <div class="close-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </div>
+
+    <div class="content">
+      <div class="skill-icon">
+        <svg class="hexagon" viewBox="0 0 120 120">
+          <polygon class="hex-fill-blue" points="60,5 110,30 110,90 60,115 10,90 10,30"/>
+        </svg>
+        <div class="icon-inner">&#x1F44A;</div>
+      </div>
+
+      <div class="category-label">PLANCHE</div>
+      <div class="skill-title">Tuck Planche</div>
+      <div class="skill-description">Hold your body parallel to the ground with tucked knees. A key stepping stone in the planche progression.</div>
+
+      <div class="difficulty-row">
+        <span class="difficulty-label">Difficulty:</span>
+        <div class="stars">
+          <span class="star">&#9733;</span>
+          <span class="star">&#9733;</span>
+          <span class="star">&#9733;</span>
+          <span class="star empty">&#9733;</span>
+          <span class="star empty">&#9733;</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-title">GOAL</div>
+        <div class="info-card-value">Hold 10 seconds</div>
+      </div>
+
+      <div class="requirements">
+        <div class="requirements-title">Requirements</div>
+        <div class="req-item">
+          <span class="req-check">&#10003;</span>
+          <span class="req-text">Complete Frog Stand progression</span>
+        </div>
+        <div class="req-item">
+          <span class="req-check">&#10003;</span>
+          <span class="req-text">15s Frog Stand hold</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-actions">
+      <button class="btn btn-primary">Keep Select</button>
+      <button class="btn btn-secondary">Try Frog Stand first</button>
+    </div>
+  </div>
+  <div class="frame-label">Soft Recommendation — Light</div>
+</div>
+
+<!-- ========== SCREEN 2: Direct Select — Dark ========== -->
+<div>
+  <div class="phone-frame dark">
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons">
+        <svg viewBox="0 0 18 12"><path d="M1 4.5C3.5 1.5 7 0 9 0s5.5 1.5 8 4.5" stroke="currentColor" stroke-width="1.5" fill="none"/><path d="M4 7.5C5.5 5.5 7 4.5 9 4.5s3.5 1 5 3" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="9" cy="10.5" r="1.5" fill="currentColor"/></svg>
+        <svg viewBox="0 0 18 12"><rect x="1" y="1" width="16" height="10" rx="2" stroke="currentColor" stroke-width="1.2" fill="none"/><rect x="3" y="3" width="10" height="6" rx="1" fill="currentColor"/></svg>
+      </div>
+    </div>
+
+    <div class="close-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+    </div>
+
+    <div class="content">
+      <div class="skill-icon">
+        <svg class="hexagon" viewBox="0 0 120 120">
+          <polygon class="hex-fill-blue" points="60,5 110,30 110,90 60,115 10,90 10,30"/>
+        </svg>
+        <div class="icon-inner">&#x1F3CB;</div>
+      </div>
+
+      <div class="category-label">PLANCHE</div>
+      <div class="skill-title">Frog Stand</div>
+      <div class="skill-description">Balance on your hands with knees resting on elbows. The foundation for all planche progressions.</div>
+
+      <div class="difficulty-row">
+        <span class="difficulty-label">Difficulty:</span>
+        <div class="stars">
+          <span class="star">&#9733;</span>
+          <span class="star">&#9733;</span>
+          <span class="star empty">&#9733;</span>
+          <span class="star empty">&#9733;</span>
+          <span class="star empty">&#9733;</span>
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-title">GOAL</div>
+        <div class="info-card-value">Hold 15 seconds</div>
+      </div>
+
+      <div class="requirements">
+        <div class="requirements-title">Requirements</div>
+        <div class="req-item">
+          <span class="req-check">&#10003;</span>
+          <span class="req-text">Complete Base level exercises</span>
+        </div>
+        <div class="req-item">
+          <span class="req-check">&#10003;</span>
+          <span class="req-text">45s planche lean hold</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-actions">
+      <button class="btn btn-primary">Select Skill</button>
+    </div>
+  </div>
+  <div class="frame-label">Direct Select — Dark</div>
+</div>
+
+</body>
+</html>
