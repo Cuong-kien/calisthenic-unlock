@@ -72,7 +72,7 @@ extension SkillCatalog {
             skillPrerequisites: ["15s planche lean hold", "50 push-ups"],
             requirement: "You can hold a tuck planche for 10 seconds",
             requiresSubscription: false,
-            recommendedPreviousSkillID: "foundation2",
+            recommendedPreviousSkillID: nil,
             activeIconImageName: "icon-tuck-planche-active",
             deactiveIconImageName: "icon-tuck-planche-deactive"
         ),
@@ -202,107 +202,104 @@ extension SkillCatalog {
     // MARK: - Frog Stand Stages
 
     private static let frogStandStages: [ExerciseStage] = [
-        ExerciseStage(
-            name: "Frog Stand Lean",
-            description: "Keep your wrists directly below your shoulders and look slightly forward — not straight down. Engage your core as your weight shifts onto your hands. Avoid rushing the weight transfer; control is more important than speed.",
-            imageName: "frog-stand-lean",
-            guide: "Track how long you hold the forward lean before returning; increase difficulty by holding longer and reducing weight on your feet each rep. No bands needed — progress comes from controlled weight transfer.",
+        Self.frogStandLeanStage(
             reps: "5 rep",
-            exerciseType: .repBased,
-            nextStageCondition: "Move to Stage 2 when you can hold the forward lean position for 10–15 seconds with your full weight on your hands.",
-            summary: "The entry point for wrist-supported balance training. Targets the wrists, core, and shoulder stabilisers through controlled forward weight transfer. Develops the balance awareness and wrist strength needed to progress into the full frog stand."
+            nextStageCondition: "Move to Stage 2 when you can hold 10–15s × 5 reps."
         ),
-        ExerciseStage(
-            name: "Frog Stand Toe Tap",
-            description: "Lean forward and lift one foot first — feel the balance before trying the other. Once steady, slowly lift the second foot off the ground. Don't rush — one leg at a time builds real control.",
-            guide: "Put a pillow in front of you so falling forward doesn't hurt. Start with one foot, then both; you'll fall, you'll wobble — that's normal, just don't quit.",
+        Self.frogStandToeTapStage(
             reps: "8 rep",
-            exerciseType: .repBased,
-            spriteConfig: SpriteConfig(imageName: "sprite-frog-toe-tap", frameCount: 7, columns: 3, fps: 2),
-            nextStageCondition: "Move to Stage 3 when you can hold both feet off the ground for 4–5 seconds.",
-            summary: "Learn to balance on your hands by lifting one leg at a time. Works your wrists, shoulders, and core. A safe way to build up to the full frog stand."
+            nextStageCondition: "Move to Stage 3 when you can hold 4–5s × 8 reps."
         ),
-        ExerciseStage(
-            name: "Frog Stand Lean and Raise",
-            description: "Press through your entire palm — not just the fingers — for better stability. Slightly protract your shoulders and look slightly forward, not straight down. Avoid looking up or making sudden corrections; find the balance point with small, steady adjustments.",
-            guide: "Track how long you hold the raised position each rep — 3 seconds consistently means you're ready for the next stage; push through your entire palm for better stability. No bands needed — this is entirely about balance.",
+        Self.frogStandLeanAndRaiseStage(
             reps: "5 rep",
-            exerciseType: .repBased,
-            spriteConfig: SpriteConfig(imageName: "sprite-frog-lean-and-raise", frameCount: 8, columns: 4, fps: 2),
-            nextStageCondition: "Move to Stage 4 when you can hold the raised position for 3+ seconds on each rep.",
-            summary: "Develops the ability to find and hold the frog stand balance point under control. Targets wrist extensors, serratus anterior, and core stability. Bridges the gap between a partial lean and a full sustained frog stand hold."
+            nextStageCondition: "Move to Stage 4 when you can hold 3+s × 5 reps."
         ),
-        ExerciseStage(
-            name: "Frog Stand Hold",
-            description: "Breathe steadily and keep your core engaged — holding your breath causes tension that breaks balance. Fix your gaze on a spot about 30 cm ahead of your hands. Avoid looking up or letting your elbows flare outward.",
-            imageName: "frog-stand",
-            guide: "Track your longest unbroken hold and add 2–3 seconds per week; increase difficulty by reducing your elbow bend angle or performing on parallettes. No bands needed — progress comes from hold time and wrist strength.",
+        Self.frogStandHoldStage(
             reps: "10s",
             durationSeconds: 10,
-            exerciseType: .timed,
-            summary: "The first full wrist-supported bodyweight balance skill in calisthenics. Targets the wrist extensors, core, and shoulder stabilisers under static hold conditions. Builds the balance, wrist strength, and body awareness that serve as the foundation for all planche progressions."
+            nextStageCondition: "Record your progress"
         ),
     ]
 
     // MARK: - Tuck Planche Stages
 
     private static let tuckPlancheStages: [ExerciseStage] = [
-        ExerciseStage(
-            name: "Tuck Raise Toes Assisted",
-            description: "Press actively through your hands and protract your shoulders — don't just balance on your toes. Keep your knees tight to your chest and breathe steadily. Avoid leaning too far forward; your hips should stay level with your shoulders.",
-            guide: "Track how lightly your toes touch the floor — the lighter, the better; try to hold completely off the floor for 1–2 seconds per set. Loop a resistance band around your waist anchored above to help maintain elevation as you reduce toe contact.",
+        Self.tuckPlancheToesAssistedStage(
             reps: "10 rep",
-            exerciseType: .repBased,
-            spriteConfig: SpriteConfig(imageName: "sprite-tuck-toes-assisted", frameCount: 9, columns: 3, fps: 2),
-            nextStageCondition: "Move to Stage 2 when you can hold for 5+ seconds with toes barely touching on every rep.",
-            summary: "The closest toe-assisted version of the tuck planche, bridging floor work and air balance. Targets the shoulder girdle and core while relying minimally on ground contact. Builds the pressing strength and balance confidence needed for a fully unsupported tuck planche."
+            nextStageCondition: "Move to Stage 2 when you can hold 5+s × 10 reps."
         ),
-        ExerciseStage(
-            name: "Tuck Planche (Support)",
-            description: "Fight for balance even with the band — it assists but doesn't replace your effort. Keep your knees tight to your chest and shoulders protracted. Avoid sitting passively on the band; your hands should be doing most of the pressing work.",
-            imageName: "tuck-parallettes",
-            guide: "Track your hold time and band thickness each session; progress by switching to thinner bands to reduce assistance. The band should make the hold achievable — not effortless.",
+        Self.tuckPlancheSupportStage(
             reps: "15s",
             durationSeconds: 15,
-            exerciseType: .timed,
-            nextStageCondition: "Move to Stage 3 when you can hold 15 seconds without relying on the band for balance.",
-            summary: "A resistance band-assisted tuck planche hold that reduces bodyweight load for strength development. Targets the shoulder girdle, serratus anterior, and core under assisted conditions. Allows practice of correct planche form before full bodyweight is manageable."
+            nextStageCondition: "Move to Stage 3 when you can hold 15s × 3 sets."
         ),
-        ExerciseStage(
-            name: "Tuck Planche",
-            description: "Push the floor away aggressively and keep your shoulders protracted — passive hanging doesn't build the required strength. Keep your knees tight to your chest, core braced, and breathe steadily. Avoid letting your hips drop or your gaze drift downward.",
-            imageName: "tuck-planche-ground",
-            guide: "Track your hold time and add 1–2 seconds per week; increase difficulty by holding longer or beginning to push your hips backward. Loop a resistance band around your waist anchored above when you can't hold unassisted, and remove it once you hold cleanly for 3+ seconds.",
+        Self.tuckPlancheGroundStage(
             reps: "15s",
             durationSeconds: 15,
-            exerciseType: .timed,
-            nextStageCondition: "",
-            summary: "The first fully unassisted tuck planche — both feet off the ground. Targets the shoulder girdle, serratus anterior, and core under full bodyweight. A critical milestone demonstrating the pressing strength and balance needed to advance toward the straddle planche."
+            nextStageCondition: "Record your progress"
+        ),
+    ]
+
+    // MARK: - ADV Tuck Planche Hold Stages
+
+    private static let advTuckPlancheHoldStages: [ExerciseStage] = [
+        Self.advTuckSupportStage(
+            reps: "10s",
+            durationSeconds: 10,
+            nextStageCondition: "Move to Stage 2 when you can hold 10+s × 3 sets."
+        ),
+        Self.advTuckGroundStage(
+            reps: "10s",
+            durationSeconds: 10,
+            nextStageCondition: "Record your progress"
         ),
     ]
 
     // MARK: - ADV Tuck Planche Stages
 
     private static let advTuckPlancheStages: [ExerciseStage] = [
-        ExerciseStage(
-            name: "Tuck to ADV hip open",
-            description: "Maintain shoulder protraction and arm lock as your hips move back — don't let them slip. Push your shoulders forward to counterbalance the extending hips. Avoid losing elevation; your hips should not drop during the transition.",
-            guide: "Track reps where you clearly control the hip open position without wobbling; increase difficulty by adding a 2-second pause in the open position. No band needed — this is a balance and mobility drill.",
+        Self.advTuckHipOpenStage(
             reps: "10 rep",
-            exerciseType: .repBased,
-            spriteConfig: SpriteConfig(imageName: "sprite-tuck-to-adv-1", frameCount: 9, columns: 3, fps: 2),
-            nextStageCondition: "Move to Stage 2 when you can control the hip open position on every rep with steady balance.",
-            summary: "An active drill teaching the hip extension pattern of the advanced tuck planche. Targets the shoulder girdle and core through controlled hip push-back under load. Develops the body awareness and balance control needed to hold the flat-back advanced tuck position."
+            nextStageCondition: "Hold posture 2s before falling in 10 reps → Stage 2."
         ),
-        ExerciseStage(
-            name: "Tuck to ADV pump",
-            description: "Keep your arms locked and shoulders protracted throughout both positions. The flat-back position is the goal — avoid letting your lower back round as your hips extend. Don't rush; slow transitions build strength more effectively than fast ones.",
-            guide: "Track reps with a flat back clearly achieved in the advanced position; increase difficulty by slowing each transition to 3 seconds. Use a resistance band around your waist anchored above if you struggle to maintain the advanced tuck position.",
+        Self.advTuckPumpStage(
             reps: "10 rep",
-            exerciseType: .repBased,
-            spriteConfig: SpriteConfig(imageName: "sprite-tuck-to-adv-2", frameCount: 9, columns: 3, fps: 2),
-            nextStageCondition: "",
-            summary: "A pump-style drill cycling between tuck and advanced tuck positions to build transition strength. Targets the shoulder girdle and hip flexors through repeated position changes. Develops the endurance and control needed to hold the advanced tuck planche statically."
+            nextStageCondition: "Record your progress"
+        ),
+    ]
+
+    // MARK: - Straddle Planche Stages
+
+    private static let straddlePlancheStages: [ExerciseStage] = [
+        Self.straddleSupportStage(
+            reps: "5s",
+            durationSeconds: 5,
+            nextStageCondition: "Move to Stage 2 when you can hold 5+s × 3 sets."
+        ),
+        Self.straddleGroundStage(
+            reps: "5s",
+            durationSeconds: 5,
+            nextStageCondition: "Record your progress"
+        ),
+    ]
+
+    // MARK: - Full Planche Stages
+
+    private static let fullPlancheStages: [ExerciseStage] = [
+        Self.fullPlancheWallStage(
+            reps: "10s",
+            durationSeconds: 10,
+            nextStageCondition: "Move to Stage 2 when you can hold 10–15s × 3 sets."
+        ),
+        Self.fullPlancheSupportStage(
+            reps: "5s",
+            durationSeconds: 5,
+            nextStageCondition: "Move to Stage 3 when you can hold 5+s × 3 sets."
+        ),
+        Self.fullPlancheGroundStage(
+            reps: "5s",
+            durationSeconds: 5,
+            nextStageCondition: "Record your progress"
         ),
     ]
 
@@ -344,58 +341,10 @@ extension SkillCatalog {
                 sets: 3,
                 summary: "A push-up where only your shoulder blades move — your arms stay locked straight. Works the muscles around your shoulder blades and upper back. Great for learning how to control your shoulders independently."
             ),
-            Exercise(
-                name: "Planche Lean",
-                skillID: "foundation2",
-                description: "Keep your arms completely straight — bent elbows take the work away from your shoulders. Lean forward until your shoulders pass your wrists, and hold. Don't let your hips pike up or your back round.",
-                imageName: "planche-lean",
-                reps: "15s",
-                repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
-                durationSeconds: 15,
-                exerciseType: .timed,
-                guide: "Mark where your shoulders reach past your wrists and try to beat it next session. Start with a small lean and add distance as your wrists get stronger.",
-                sets: 3,
-                summary: "A plank position where you lean your weight forward past your wrists. Works your wrists, shoulders, and core under heavy load. The further you lean, the more your shoulders and wrists have to work."
-            ),
-            Exercise(
-                name: "Pseudo Planche Push-ups",
-                skillID: "foundation2",
-                description: "Keep your shoulders ahead of your wrists the whole time — that's the whole point. Tuck your elbows close to your body as you go down and up. Don't let your hips rise or your shoulders drift backward.",
-                imageName: "sprite-pseudo-planche-pushup",
-                spriteConfig: SpriteConfig(imageName: "sprite-pseudo-planche-pushup", frameCount: 9, columns: 3, fps: 2),
-                reps: "5 rep",
-                repsByDifficulty: [.starter: "5 rep", .standard: "8 rep", .solid: "10 rep"],
-                exerciseType: .repBased,
-                guide: "Move your hands closer to your hips to make it harder, or closer to your shoulders to make it easier. Try a 3-second descent to build more strength in the bottom position.",
-                sets: 3,
-                summary: "A push-up with your hands placed further back toward your hips. Works your front shoulders, triceps, and chest with more shoulder load than a normal push-up. The hand position shifts your bodyweight forward, making your shoulders work harder."
-            ),
-            Exercise(
-                name: "Pike Push-ups",
-                skillID: "foundation2",
-                description: "Keep your hips as high as possible — the steeper the angle, the harder your shoulders work. Lower the top of your head toward the floor between your hands. Don't drop your hips or push your head forward.",
-                imageName: "sprite-pike-pushup",
-                spriteConfig: SpriteConfig(imageName: "sprite-pike-pushup", frameCount: 9, columns: 3, fps: 2),
-                reps: "8 rep",
-                repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"],
-                exerciseType: .repBased,
-                guide: "Put your feet on a box or step to make it harder — more height means more shoulder load. If you can't reach the floor yet, use a smaller range and build up over time.",
-                sets: 3,
-                summary: "A push-up with your hips high in the air, forming an upside-down V shape. Works your shoulders, triceps, and upper back. The steep angle puts most of the load on your shoulders instead of your chest."
-            ),
-            Exercise(
-                name: "Hollow Rock",
-                skillID: "foundation2",
-                description: "Press your lower back flat into the floor — no gap, ever. Keep your arms by your ears and legs straight while you rock. Don't use momentum — your abs should do all the work.",
-                imageName: "hollow-rock",
-                reps: "15s",
-                repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
-                durationSeconds: 15,
-                exerciseType: .timed,
-                guide: "Bend your knees if you can't keep your lower back flat — that's the easier version. Add time each week; when 30 seconds feels easy, hold a weight plate overhead.",
-                sets: 3,
-                summary: "A rocking movement on your back with arms and legs extended. Works your abs and hip flexors through constant tension. Teaches your body to stay tight and curved like a banana shape."
-            ),
+            Self.plancheLean(skillID: "foundation2", reps: "15s", durationSeconds: 15),
+            Self.pseudoPlanchePushups(skillID: "foundation2", reps: "5 rep", repsByDifficulty: [.starter: "5 rep", .standard: "8 rep", .solid: "10 rep"]),
+            Self.pikePushups(skillID: "foundation2", reps: "8 rep", repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"]),
+            Self.hollowRock(skillID: "foundation2"),
             Exercise(
                 name: "Frog Stand",
                 skillID: "foundation2",
@@ -408,82 +357,11 @@ extension SkillCatalog {
 
         // Tuck Planche
         map["tuckPlanche"] = [
-            Exercise(
-                name: "Planche Lean",
-                skillID: "tuckPlanche",
-                description: "Keep your arms fully locked straight — bending the elbows reduces the training effect. Maintain a rigid body line and breathe steadily throughout the hold. Avoid letting your hips pike up or your shoulders round inward.",
-                imageName: "planche-lean",
-                reps: "15s",
-                repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
-                durationSeconds: 15,
-                exerciseType: .timed,
-                guide: "Track how far your shoulders pass your wrists each session; increase difficulty by leaning further forward or holding longer. Loop a resistance band around your waist anchored above to lighten the load, or elevate your feet to increase difficulty.",
-                sets: 3,
-                summary: "Conditions the wrists, shoulders, and core for the forward lean required in planche. Targets the anterior deltoids and serratus anterior under bodyweight load. Progressively overloads the shoulder girdle with the exact lean angle of the planche skill."
-            ),
-            Exercise(
-                name: "Pike Push-ups",
-                skillID: "tuckPlanche",
-                description: "Keep your hips high throughout — the steeper your angle, the more shoulder load you get. Lower the top of your head toward the floor and track your elbows slightly outward, not fully flared. Avoid dropping your hips during the movement or pushing your head forward instead of down.",
-                imageName: "sprite-pike-pushup",
-                spriteConfig: SpriteConfig(imageName: "sprite-pike-pushup", frameCount: 9, columns: 3, fps: 2),
-                reps: "10 rep",
-                repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"],
-                exerciseType: .repBased,
-                guide: "Track reps with full depth — head nearly touching the floor; increase difficulty by elevating your feet on a box. Loop a resistance band across your upper back anchored under your hands to assist the press, or progress to deficit pike push-ups on parallettes.",
-                sets: 3,
-                summary: "A vertical pressing movement targeting the shoulders, triceps, and upper back. Builds the overhead strength required for handstands and handstand push-ups. The steep body angle shifts load onto the deltoids, making it a key progression toward overhead skills."
-            ),
-            Exercise(
-                name: "Hollow Rock",
-                skillID: "tuckPlanche",
-                description: "Press your lower back firmly into the floor — there must be no gap at any point. Keep your arms by your ears and legs straight, and breathe steadily. Avoid rocking with momentum; the movement must come entirely from your abs.",
-                imageName: "hollow-rock",
-                reps: "15s",
-                repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
-                durationSeconds: 15,
-                exerciseType: .timed,
-                guide: "Track total rock time per session; increase difficulty by extending arms and legs further out or holding a weight plate overhead. Use bent knees as an easier variation, or place a resistance band around your thighs to increase core demand.",
-                sets: 3,
-                summary: "Trains the hollow body position — the core shape required in every planche hold. Targets the rectus abdominis and hip flexors through constant isometric tension. Develops the body compression needed to keep legs elevated without hip sag."
-            ),
-            Exercise(
-                name: "Pseudo Planche Push-ups",
-                skillID: "tuckPlanche",
-                description: "Keep your shoulders ahead of your wrists at all times — this is the key technique point. Tuck your elbows tight to your sides throughout the movement. Avoid letting your hips rise or your shoulders drift back behind your wrists.",
-                imageName: "sprite-pseudo-planche-pushup",
-                spriteConfig: SpriteConfig(imageName: "sprite-pseudo-planche-pushup", frameCount: 9, columns: 3, fps: 2),
-                reps: "10 rep",
-                repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"],
-                exerciseType: .repBased,
-                guide: "Track clean reps where your shoulders stay ahead of your wrists; increase difficulty by moving hands lower toward your hips or using a 3-second descent. Loop a resistance band around your waist anchored above to reduce load, or perform on parallettes for greater depth.",
-                sets: 3,
-                summary: "Simulates the planche forward lean while building pressing strength. Targets the anterior deltoids, triceps, and serratus anterior under a forward-shifted bodyweight load. A key bridge between standard push-ups and true planche pressing."
-            ),
-            Exercise(
-                name: "Tuck Sit Swing",
-                skillID: "tuckPlanche",
-                description: "Drive the swing from your core — not momentum. Keep your core tight and control the arc in both directions equally. Avoid letting the swing become passive; every rep should feel intentional and deliberate.",
-                imageName: "sprite-tuck-sit-swing",
-                spriteConfig: SpriteConfig(imageName: "sprite-tuck-sit-swing", frameCount: 9, columns: 3, fps: 2),
-                reps: "8 rep",
-                exerciseType: .repBased,
-                guide: "Track reps where the forward lean clearly passes your wrists; increase difficulty by pausing 2 seconds at each end. Loop a resistance band around your waist anchored above to practice the forward lean depth safely.",
-                sets: 3,
-                summary: "Develops dynamic transition control between the tuck sit and forward lean positions. Targets the core, hip flexors, and shoulder stabilisers through rhythmic controlled movement. Builds the swing mechanics used in more advanced planche transitions on parallettes."
-            ),
-            Exercise(
-                name: "Planche Lean Drag to Tuck Planche",
-                skillID: "tuckPlanche",
-                description: "Keep your arms straight throughout the drag and hold phases — bending the elbows turns this into a different exercise. Protract your shoulders actively as your knees come in. Avoid piking your hips too high; aim to keep them level with your shoulders.",
-                imageName: "sprite-planche-lean-drag-tuck",
-                spriteConfig: SpriteConfig(imageName: "sprite-planche-lean-drag-tuck", frameCount: 9, columns: 3, fps: 2),
-                reps: "8 rep",
-                exerciseType: .repBased,
-                guide: "Track reps where you hold the tuck for at least 2 seconds before lowering; increase difficulty by extending the hold to 5 seconds or slowing the drag to 4 seconds. Loop a resistance band around your waist anchored above to assist the lift-off phase.",
-                sets: 3,
-                summary: "Bridges the gap between a floor-level lean and a full tuck planche. Targets the shoulder girdle, core, and hip flexors in a coordinated pull-through movement. Develops the proprioception and strength needed to transition into the tuck planche from a lean."
-            ),
+            Self.plancheLean(skillID: "tuckPlanche", reps: "15s", durationSeconds: 15),
+            Self.pikePushups(skillID: "tuckPlanche", reps: "10 rep", repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"]),
+            Self.pseudoPlanchePushups(skillID: "tuckPlanche", reps: "10 rep", repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"]),
+            Self.lSitHold(skillID: "tuckPlanche"),
+            Self.tuckSitSwing(skillID: "tuckPlanche", reps: "8 rep"),
             Exercise(
                 name: "Tuck Planche",
                 skillID: "tuckPlanche",
@@ -496,32 +374,8 @@ extension SkillCatalog {
 
         // ADV Tuck Planche
         map["advTuckPlanche"] = [
-            Exercise(
-                name: "Planche Lean",
-                skillID: "advTuckPlanche",
-                description: "Keep your arms fully locked straight — bending the elbows reduces the training effect. Maintain a rigid body line and breathe steadily throughout the hold. Avoid letting your hips pike up or your shoulders round inward.",
-                imageName: "planche-lean",
-                reps: "20s",
-                repsByDifficulty: [.starter: "20s", .standard: "20s", .solid: "20s"],
-                durationSeconds: 20,
-                exerciseType: .timed,
-                guide: "Track how far your shoulders pass your wrists each session; increase difficulty by leaning further forward or holding longer. Loop a resistance band around your waist anchored above to lighten the load, or elevate your feet to increase difficulty.",
-                sets: 3,
-                summary: "Conditions the wrists, shoulders, and core for the forward lean required in planche. Targets the anterior deltoids and serratus anterior under bodyweight load. Progressively overloads the shoulder girdle with the exact lean angle of the planche skill."
-            ),
-            Exercise(
-                name: "Handstand Hold (Wall)",
-                skillID: "advTuckPlanche",
-                description: "Stack your wrists, shoulders, and hips in one vertical line and press actively through your fingertips. Squeeze your glutes, engage your core, and breathe steadily throughout. Avoid arching your lower back or letting your legs drift apart.",
-                imageName: "handstand-hold-wall",
-                reps: "15s",
-                repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
-                durationSeconds: 15,
-                exerciseType: .timed,
-                guide: "Track your longest unbroken hold and add 2–3 seconds per week; increase difficulty by reducing wall contact to fingertips only, building toward freestanding. Loop a resistance band around your hips overhead to assist freestanding balance practice.",
-                sets: 3,
-                summary: "An inverted isometric hold targeting the shoulders, triceps, and core under full bodyweight. Builds the overhead pushing endurance and straight-body tension required for freestanding handstands. Develops the shoulder stability critical for both handstand and planche skills."
-            ),
+            Self.plancheLean(skillID: "advTuckPlanche", reps: "20s", durationSeconds: 20),
+            Self.lSitHold(skillID: "advTuckPlanche"),
             Exercise(
                 name: "Tuck Planche Push-up",
                 skillID: "advTuckPlanche",
@@ -535,41 +389,16 @@ extension SkillCatalog {
                 summary: "A planche-specific pressing movement with legs tucked to the chest. Targets the anterior deltoids, triceps, and serratus anterior under maximum forward lean. Builds the pushing strength required to progress toward straddle and full planche push-ups."
             ),
             Exercise(
-                name: "L-Sit Hold",
+                name: "Planche Lean to ADV Planche",
                 skillID: "advTuckPlanche",
-                description: "Press actively through both handles — passive resting won't build the strength needed. Keep your legs fully extended with toes pointed and thighs clear of the handles. Avoid letting your shoulders rise toward your ears.",
-                imageName: "l-sit-hold",
-                reps: "20s",
-                repsByDifficulty: [.starter: "20s", .standard: "20s", .solid: "20s"],
-                durationSeconds: 20,
-                exerciseType: .timed,
-                guide: "Track your longest unbroken hold and add 2–3 seconds per week; build up from a tucked L-Sit before extending fully. Loop a resistance band around a pull-up bar and pass it under your thighs to support your hips, or add ankle weights to increase difficulty.",
-                sets: 3,
-                summary: "An isometric compression hold targeting the triceps, hip flexors, and core. Builds the pushing and compression strength needed to support bodyweight on parallettes. Develops the pressing endurance and body tension that carry directly into planche work."
-            ),
-            Exercise(
-                name: "Tuck Sit Swing",
-                skillID: "advTuckPlanche",
-                description: "Drive the swing from your core — not momentum. Keep your core tight and control the arc in both directions equally. Avoid letting the swing become passive; every rep should feel intentional and deliberate.",
-                imageName: "sprite-tuck-sit-swing",
-                spriteConfig: SpriteConfig(imageName: "sprite-tuck-sit-swing", frameCount: 9, columns: 3, fps: 2),
-                reps: "12 rep",
-                exerciseType: .repBased,
-                guide: "Track reps where the forward lean clearly passes your wrists; increase difficulty by pausing 2 seconds at each end. Loop a resistance band around your waist anchored above to practice the forward lean depth safely.",
-                sets: 3,
-                summary: "Develops dynamic transition control between the tuck sit and forward lean positions. Targets the core, hip flexors, and shoulder stabilisers through rhythmic controlled movement. Builds the swing mechanics used in more advanced planche transitions on parallettes."
-            ),
-            Exercise(
-                name: "Handstand Push-up (Wall)",
-                skillID: "advTuckPlanche",
-                description: "Keep your body in a straight line — squeeze your glutes and brace your core throughout. Lower under control with elbows tracking slightly outward, not flaring wide. Avoid arching your lower back or letting your head push forward rather than straight down.",
-                imageName: "sprite-handstand-pushup-wall",
-                spriteConfig: SpriteConfig(imageName: "sprite-handstand-pushup-wall", frameCount: 9, columns: 3, fps: 2),
+                description: "From a planche lean, drag your knees toward your chest and lift into a tuck planche. Hold the top for a second, then lower back to the lean. Keep your arms locked straight the whole time — bent elbows make it a different exercise.",
+                imageName: "sprite-planche-lean-drag-tuck",
+                spriteConfig: SpriteConfig(imageName: "sprite-planche-lean-drag-tuck", frameCount: 9, columns: 3, fps: 2),
                 reps: "8 rep",
                 exerciseType: .repBased,
-                guide: "Track clean reps with full range of motion — head nearly touching the floor; increase difficulty by using a deficit on parallettes or slowing the descent. Loop a resistance band around your waist anchored above to reduce bodyweight when you can't complete full reps.",
+                guide: "Focus on a clean hold at the top — don't rush back down. If your hips pike up higher than your shoulders, you're pulling your knees in too fast.",
                 sets: 3,
-                summary: "A vertical pressing movement in an inverted position targeting the deltoids, triceps, and upper traps. Builds the overhead strength required for freestanding handstand push-ups. Develops pressing power, body tension, and scapular stability for advanced overhead skills."
+                summary: "A transition from a planche lean into a tuck planche and back down. Works your shoulders, core, and hip flexors in one smooth pulling motion. Combines the lean and the tuck into a single controlled movement."
             ),
             Exercise(
                 name: "Tuck to ADV Tuck Planche",
@@ -579,6 +408,14 @@ extension SkillCatalog {
                 spriteConfig: SpriteConfig(imageName: "sprite-tuck-to-adv-1", frameCount: 9, columns: 3, fps: 2),
                 sets: 3,
                 stages: advTuckPlancheStages
+            ),
+            Exercise(
+                name: "ADV Tuck Planche",
+                skillID: "advTuckPlanche",
+                description: "A staged progression toward the advanced tuck planche hold. Select the stage that matches your current ability and work through both stages progressively.",
+                imageName: "adv-tuck-planche-hold",
+                sets: 3,
+                stages: advTuckPlancheHoldStages
             ),
         ]
 
@@ -597,56 +434,9 @@ extension SkillCatalog {
                 sets: 3,
                 summary: "A straddle-specific forward lean targeting the shoulders and serratus anterior under wide-leg load. Develops the protraction strength and lean depth required to progress into the straddle planche. Wider legs reduce load compared to a full planche lean."
             ),
-            Exercise(
-                name: "Handstand Push-up (Wall)",
-                skillID: "straddlePlanche",
-                description: "Keep your body in a straight line — squeeze your glutes and brace your core throughout. Lower under control with elbows tracking slightly outward, not flaring wide. Avoid arching your lower back or letting your head push forward rather than straight down.",
-                imageName: "sprite-handstand-pushup-wall",
-                spriteConfig: SpriteConfig(imageName: "sprite-handstand-pushup-wall", frameCount: 9, columns: 3, fps: 2),
-                reps: "10 rep",
-                exerciseType: .repBased,
-                guide: "Track clean reps with full range of motion — head nearly touching the floor; increase difficulty by using a deficit on parallettes or slowing the descent. Loop a resistance band around your waist anchored above to reduce bodyweight when you can't complete full reps.",
-                sets: 3,
-                summary: "A vertical pressing movement in an inverted position targeting the deltoids, triceps, and upper traps. Builds the overhead strength required for freestanding handstand push-ups. Develops pressing power, body tension, and scapular stability for advanced overhead skills."
-            ),
-            Exercise(
-                name: "Handstand Hold (Wall)",
-                skillID: "straddlePlanche",
-                description: "Stack your wrists, shoulders, and hips in one vertical line and press actively through your fingertips. Squeeze your glutes, engage your core, and breathe steadily throughout. Avoid arching your lower back or letting your legs drift apart.",
-                imageName: "handstand-hold-wall",
-                reps: "15s",
-                repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
-                durationSeconds: 15,
-                exerciseType: .timed,
-                guide: "Track your longest unbroken hold and add 2–3 seconds per week; increase difficulty by reducing wall contact to fingertips only, building toward freestanding. Loop a resistance band around your hips overhead to assist freestanding balance practice.",
-                sets: 2,
-                summary: "An inverted isometric hold targeting the shoulders, triceps, and core under full bodyweight. Builds the overhead pushing endurance and straight-body tension required for freestanding handstands. Develops the shoulder stability critical for both handstand and planche skills."
-            ),
-            Exercise(
-                name: "Tuck Pushup to Straddle Planche Pushup",
-                skillID: "straddlePlanche",
-                description: "Maintain shoulder protraction and hips elevated through both the tuck and straddle positions. Control the leg extension — don't let your hips drop during the transition to straddle. Avoid collapsing at the top of the press.",
-                imageName: "sprite-tuck-pushup-to-straddle",
-                spriteConfig: SpriteConfig(imageName: "sprite-tuck-pushup-to-straddle", frameCount: 12, columns: 3, fps: 2),
-                reps: "5 rep",
-                exerciseType: .repBased,
-                guide: "Track clean reps where both the tuck descent and straddle hold are clear; increase difficulty by holding the straddle for 2–3 seconds or slowing the descent to 4 seconds. Loop a resistance band around your waist anchored above to assist when you can't maintain elevation.",
-                sets: 3,
-                summary: "Combines a tuck planche push-up with a straddle extension at the top of each rep. Targets the anterior deltoids, triceps, and serratus anterior through a dynamic press-and-extend pattern. Builds the power and body control needed to progress toward full planche push-ups."
-            ),
-            Exercise(
-                name: "ADV Tuck Hold",
-                skillID: "straddlePlanche",
-                description: "Push your hips as far back as possible while keeping your back parallel to the floor — this flat spine is the defining form cue. Shoulders must be maximally protracted and arms locked straight. Avoid letting your hips rise above shoulder level or your lower back round.",
-                imageName: "adv-tuck-planche-hold",
-                reps: "10s",
-                repsByDifficulty: [.starter: "10s", .standard: "10s", .solid: "10s"],
-                durationSeconds: 10,
-                exerciseType: .timed,
-                guide: "Track your hold time and add 1–2 seconds per week; increase difficulty by gradually pushing your hips further back toward a straddle. Loop a resistance band around your waist anchored above to reduce load when you can't hold the flat-back position.",
-                sets: 3,
-                summary: "An isometric hold with the back parallel to the floor — a key planche milestone. Targets the shoulder girdle, core, and hip flexors under maximum horizontal bodyweight load. Develops the scapular protraction and body tension required for the straddle planche."
-            ),
+            Self.handstandPushupWall(skillID: "straddlePlanche", reps: "10 rep"),
+            Self.tuckPushupToStraddlePlanchePushup(skillID: "straddlePlanche"),
+            Self.advTuckHold(skillID: "straddlePlanche"),
             Exercise(
                 name: "ADV Tuck to Straddle Planche",
                 skillID: "straddlePlanche",
@@ -660,72 +450,19 @@ extension SkillCatalog {
                 summary: "A dynamic transition from advanced tuck to straddle planche. Targets the shoulder girdle and core through controlled leg extension under load. Develops the proprioception and strength needed to bridge the gap to the full planche."
             ),
             Exercise(
-                name: "Straddle Planche Hold",
+                name: "Straddle Planche",
                 skillID: "straddlePlanche",
-                description: "Keep your shoulders maximally protracted and arms fully locked throughout — any elbow bend kills the hold. Breathe steadily and maintain tension in your core and glutes. Avoid letting your hips sag below shoulder level.",
+                description: "A staged progression toward the straddle planche. Select the stage that matches your current ability and work through both stages progressively.",
                 imageName: "straddle-planche-hold",
-                reps: "5s",
-                repsByDifficulty: [.starter: "5s", .standard: "5s", .solid: "5s"],
-                durationSeconds: 5,
-                exerciseType: .timed,
-                guide: "Track your hold time — even 1 extra second per week is excellent progress; increase difficulty by gradually bringing your legs closer together toward a full planche. Loop a resistance band around your waist anchored above to support your hips.",
                 sets: 3,
-                summary: "An elite static hold with the body parallel to the ground and legs straddled wide. Targets the entire shoulder girdle, core, and glutes under near-maximum bodyweight load. Develops the extreme scapular protraction and body tension required for the full planche."
+                stages: straddlePlancheStages
             ),
         ]
 
         // Full Planche
         map["fullPlanche"] = [
-            Exercise(
-                name: "Planche Lean",
-                skillID: "fullPlanche",
-                description: "Keep your arms fully locked straight — bending the elbows reduces the training effect. Maintain a rigid body line and breathe steadily throughout the hold. Avoid letting your hips pike up or your shoulders round inward.",
-                imageName: "planche-lean",
-                reps: "20s",
-                repsByDifficulty: [.starter: "20s", .standard: "20s", .solid: "20s"],
-                durationSeconds: 20,
-                exerciseType: .timed,
-                guide: "Track how far your shoulders pass your wrists each session; increase difficulty by leaning further forward or holding longer. Loop a resistance band around your waist anchored above to lighten the load, or elevate your feet to increase difficulty.",
-                sets: 3,
-                summary: "Conditions the wrists, shoulders, and core for the forward lean required in planche. Targets the anterior deltoids and serratus anterior under bodyweight load. Progressively overloads the shoulder girdle with the exact lean angle of the planche skill."
-            ),
-            Exercise(
-                name: "Handstand Push-up (Wall)",
-                skillID: "fullPlanche",
-                description: "Keep your body in a straight line — squeeze your glutes and brace your core throughout. Lower under control with elbows tracking slightly outward, not flaring wide. Avoid arching your lower back or letting your head push forward rather than straight down.",
-                imageName: "sprite-handstand-pushup-wall",
-                spriteConfig: SpriteConfig(imageName: "sprite-handstand-pushup-wall", frameCount: 9, columns: 3, fps: 2),
-                reps: "5 rep",
-                exerciseType: .repBased,
-                guide: "Track clean reps with full range of motion — head nearly touching the floor; increase difficulty by using a deficit on parallettes or slowing the descent. Loop a resistance band around your waist anchored above to reduce bodyweight when you can't complete full reps.",
-                sets: 3,
-                summary: "A vertical pressing movement in an inverted position targeting the deltoids, triceps, and upper traps. Builds the overhead strength required for freestanding handstand push-ups. Develops pressing power, body tension, and scapular stability for advanced overhead skills."
-            ),
-            Exercise(
-                name: "Handstand Hold (Wall)",
-                skillID: "fullPlanche",
-                description: "Stack your wrists, shoulders, and hips in one vertical line and press actively through your fingertips. Squeeze your glutes, engage your core, and breathe steadily throughout. Avoid arching your lower back or letting your legs drift apart.",
-                imageName: "handstand-hold-wall",
-                reps: "20s",
-                repsByDifficulty: [.starter: "20s", .standard: "20s", .solid: "20s"],
-                durationSeconds: 20,
-                exerciseType: .timed,
-                guide: "Track your longest unbroken hold and add 2–3 seconds per week; increase difficulty by reducing wall contact to fingertips only, building toward freestanding. Loop a resistance band around your hips overhead to assist freestanding balance practice.",
-                sets: 3,
-                summary: "An inverted isometric hold targeting the shoulders, triceps, and core under full bodyweight. Builds the overhead pushing endurance and straight-body tension required for freestanding handstands. Develops the shoulder stability critical for both handstand and planche skills."
-            ),
-            Exercise(
-                name: "Tuck Pushup to Straddle Planche Pushup",
-                skillID: "fullPlanche",
-                description: "Maintain shoulder protraction and hips elevated through both the tuck and straddle positions. Control the leg extension — don't let your hips drop during the transition to straddle. Avoid collapsing at the top of the press.",
-                imageName: "sprite-tuck-pushup-to-straddle",
-                spriteConfig: SpriteConfig(imageName: "sprite-tuck-pushup-to-straddle", frameCount: 12, columns: 3, fps: 2),
-                reps: "5 rep",
-                exerciseType: .repBased,
-                guide: "Track clean reps where both the tuck descent and straddle hold are clear; increase difficulty by holding the straddle for 2–3 seconds or slowing the descent to 4 seconds. Loop a resistance band around your waist anchored above to assist when you can't maintain elevation.",
-                sets: 3,
-                summary: "Combines a tuck planche push-up with a straddle extension at the top of each rep. Targets the anterior deltoids, triceps, and serratus anterior through a dynamic press-and-extend pattern. Builds the power and body control needed to progress toward full planche push-ups."
-            ),
+            Self.plancheLean(skillID: "fullPlanche", reps: "20s", durationSeconds: 20),
+            Self.handstandPushupWall(skillID: "fullPlanche", reps: "10 rep"),
             Exercise(
                 name: "Planche Lean Raise",
                 skillID: "fullPlanche",
@@ -738,33 +475,485 @@ extension SkillCatalog {
                 sets: 3,
                 summary: "A dynamic lean where the feet lift at maximum forward shoulder position. Targets the anterior deltoids and serratus anterior under peak bodyweight load. Develops the transition strength needed to press into a full planche hold."
             ),
+            Self.straddlePlancheHold(skillID: "fullPlanche"),
             Exercise(
-                name: "Straddle Planche Hold",
+                name: "Planche One Leg",
                 skillID: "fullPlanche",
-                description: "Keep your shoulders maximally protracted and arms fully locked throughout — any elbow bend kills the hold. Breathe steadily and maintain tension in your core and glutes. Avoid letting your hips sag below shoulder level.",
-                imageName: "straddle-planche-hold",
+                description: "Extend one leg straight back and keep the other tucked beneath you — lock your arms and protract your shoulders hard. Focus on keeping your hips level — the extended leg wants to pull you sideways, so fight it with your core. Switch legs each set to build balanced strength.",
+                imageName: "full-planche-1-leg",
                 reps: "5s",
                 repsByDifficulty: [.starter: "5s", .standard: "5s", .solid: "5s"],
                 durationSeconds: 5,
                 exerciseType: .timed,
-                guide: "Track your hold time — even 1 extra second per week is excellent progress; increase difficulty by gradually bringing your legs closer together toward a full planche. Loop a resistance band around your waist anchored above to support your hips.",
+                guide: "Start with your stronger leg extended first to build confidence, then switch. If your hips twist, the extended leg is too high — bring it down to hip level and hold there. This is the last step before the full planche — you're almost there.",
                 sets: 3,
-                summary: "An elite static hold with the body parallel to the ground and legs straddled wide. Targets the entire shoulder girdle, core, and glutes under near-maximum bodyweight load. Develops the extreme scapular protraction and body tension required for the full planche."
+                summary: "A one-leg planche hold on parallettes — one leg extended, one tucked. Works your shoulders, core, and hip stabilisers under near-full planche load. The bridge between straddle and full planche that teaches you to hold a straight line."
             ),
             Exercise(
-                name: "Full Planche Hold",
+                name: "Full Planche",
                 skillID: "fullPlanche",
-                description: "Keep your entire body in one straight line — hips level with shoulders, legs together, toes pointed. Shoulders must be maximally protracted and arms fully locked; breathe steadily. Avoid letting your hips sag or your head drop forward.",
-                imageName: "figure.gymnastics",
-                reps: "5s",
-                durationSeconds: 5,
-                exerciseType: .timed,
-                guide: "Track your hold time — adding even 1 second per week is significant progress; increase difficulty by extending hold time or progressing toward a full planche push-up. Loop a resistance band around your waist anchored above to support your hips, and remove it gradually as strength improves.",
+                description: "A staged progression toward the full planche. Select the stage that matches your current ability and work through both stages progressively.",
+                imageName: "full-planche",
                 sets: 3,
-                summary: "The pinnacle static hold — entire body parallel to the ground on straight arms. Targets the shoulder girdle, core, and glutes under maximum bodyweight load. Requires extreme scapular protraction and body tension developed across all preceding levels."
+                stages: fullPlancheStages
             ),
         ]
 
         return map
     }()
+
+    // MARK: - Shared Exercise Factories
+
+    private static func plancheLean(skillID: String, reps: String, durationSeconds: Int) -> Exercise {
+        Exercise(
+            name: "Planche Lean",
+            skillID: skillID,
+            description: "Keep your arms completely straight — bent elbows take the work away from your shoulders. Lean forward until your shoulders pass your wrists, and hold. Don't let your hips pike up or your back round.",
+            imageName: "planche-lean",
+            reps: reps,
+            repsByDifficulty: [.starter: reps, .standard: reps, .solid: reps],
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            guide: "Mark where your shoulders reach past your wrists and try to beat it next session. Start with a small lean and add distance as your wrists get stronger.",
+            sets: 3,
+            summary: "A plank position where you lean your weight forward past your wrists. Works your wrists, shoulders, and core under heavy load. The further you lean, the more your shoulders and wrists have to work."
+        )
+    }
+
+    private static func pikePushups(skillID: String, reps: String, repsByDifficulty: [Difficulty: String]) -> Exercise {
+        Exercise(
+            name: "Pike Push-ups",
+            skillID: skillID,
+            description: "Keep your hips as high as possible — the steeper the angle, the harder your shoulders work. Lower the top of your head toward the floor between your hands. Don't drop your hips or push your head forward.",
+            imageName: "sprite-pike-pushup",
+            spriteConfig: SpriteConfig(imageName: "sprite-pike-pushup", frameCount: 9, columns: 3, fps: 2),
+            reps: reps,
+            repsByDifficulty: repsByDifficulty,
+            exerciseType: .repBased,
+            guide: "Put your feet on a box or step to make it harder — more height means more shoulder load. If you can't reach the floor yet, use a smaller range and build up over time.",
+            sets: 3,
+            summary: "A push-up with your hips high in the air, forming an upside-down V shape. Works your shoulders, triceps, and upper back. The steep angle puts most of the load on your shoulders instead of your chest."
+        )
+    }
+
+    private static func hollowRock(skillID: String) -> Exercise {
+        Exercise(
+            name: "Hollow Rock",
+            skillID: skillID,
+            description: "Press your lower back flat into the floor — no gap, ever. Keep your arms by your ears and legs straight while you rock. Don't use momentum — your abs should do all the work.",
+            imageName: "hollow-rock",
+            reps: "15s",
+            repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
+            durationSeconds: 15,
+            exerciseType: .timed,
+            guide: "Bend your knees if you can't keep your lower back flat — that's the easier version. Add time each week; when 30 seconds feels easy, hold a weight plate overhead.",
+            sets: 3,
+            summary: "A rocking movement on your back with arms and legs extended. Works your abs and hip flexors through constant tension. Teaches your body to stay tight and curved like a banana shape."
+        )
+    }
+
+    private static func pseudoPlanchePushups(skillID: String, reps: String, repsByDifficulty: [Difficulty: String]) -> Exercise {
+        Exercise(
+            name: "Pseudo Planche Push-ups",
+            skillID: skillID,
+            description: "Keep your shoulders ahead of your wrists the whole time — that's the whole point. Tuck your elbows close to your body as you go down and up. Don't let your hips rise or your shoulders drift backward.",
+            imageName: "sprite-pseudo-planche-pushup",
+            spriteConfig: SpriteConfig(imageName: "sprite-pseudo-planche-pushup", frameCount: 9, columns: 3, fps: 2),
+            reps: reps,
+            repsByDifficulty: repsByDifficulty,
+            exerciseType: .repBased,
+            guide: "Move your hands closer to your hips to make it harder, or closer to your shoulders to make it easier. Try a 3-second descent to build more strength in the bottom position.",
+            sets: 3,
+            summary: "A push-up with your hands placed further back toward your hips. Works your front shoulders, triceps, and chest with more shoulder load than a normal push-up. The hand position shifts your bodyweight forward, making your shoulders work harder."
+        )
+    }
+
+    private static func handstandHoldWall(skillID: String, reps: String, durationSeconds: Int, sets: Int = 3) -> Exercise {
+        Exercise(
+            name: "Handstand Hold (Wall)",
+            skillID: skillID,
+            description: "Stack your wrists, shoulders, and hips in one vertical line and press actively through your fingertips. Squeeze your glutes, engage your core, and breathe steadily throughout. Avoid arching your lower back or letting your legs drift apart.",
+            imageName: "handstand-hold-wall",
+            reps: reps,
+            repsByDifficulty: [.starter: reps, .standard: reps, .solid: reps],
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            guide: "Track your longest unbroken hold and add 2–3 seconds per week; increase difficulty by reducing wall contact to fingertips only, building toward freestanding. Loop a resistance band around your hips overhead to assist freestanding balance practice.",
+            sets: sets,
+            summary: "An inverted isometric hold targeting the shoulders, triceps, and core under full bodyweight. Builds the overhead pushing endurance and straight-body tension required for freestanding handstands. Develops the shoulder stability critical for both handstand and planche skills."
+        )
+    }
+
+    private static func handstandPushupWall(skillID: String, reps: String) -> Exercise {
+        Exercise(
+            name: "Handstand Push-up (Wall)",
+            skillID: skillID,
+            description: "Keep your body in a straight line — squeeze your glutes and brace your core throughout. Lower under control with elbows tracking slightly outward, not flaring wide. Avoid arching your lower back or letting your head push forward rather than straight down.",
+            imageName: "sprite-handstand-pushup-wall",
+            spriteConfig: SpriteConfig(imageName: "sprite-handstand-pushup-wall", frameCount: 9, columns: 3, fps: 2),
+            reps: reps,
+            exerciseType: .repBased,
+            guide: "Track clean reps with full range of motion — head nearly touching the floor; increase difficulty by using a deficit on parallettes or slowing the descent. Loop a resistance band around your waist anchored above to reduce bodyweight when you can't complete full reps.",
+            sets: 3,
+            summary: "A vertical pressing movement in an inverted position targeting the deltoids, triceps, and upper traps. Builds the overhead strength required for freestanding handstand push-ups. Develops pressing power, body tension, and scapular stability for advanced overhead skills."
+        )
+    }
+
+    private static func lSitHold(skillID: String, reps: String = "20s", durationSeconds: Int = 20) -> Exercise {
+        Exercise(
+            name: "L-Sit Hold",
+            skillID: skillID,
+            description: "Press actively through both handles — passive resting won't build the strength needed. Keep your legs fully extended with toes pointed and thighs clear of the handles. Avoid letting your shoulders rise toward your ears.",
+            imageName: "l-sit-hold",
+            reps: reps,
+            repsByDifficulty: [.starter: reps, .standard: reps, .solid: reps],
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            guide: "Track your longest unbroken hold and add 2–3 seconds per week; build up from a tucked L-Sit before extending fully. Loop a resistance band around a pull-up bar and pass it under your thighs to support your hips, or add ankle weights to increase difficulty.",
+            sets: 3,
+            summary: "An isometric compression hold targeting the triceps, hip flexors, and core. Builds the pushing and compression strength needed to support bodyweight on parallettes. Develops the pressing endurance and body tension that carry directly into planche work."
+        )
+    }
+
+    private static func tuckSitSwing(skillID: String, reps: String) -> Exercise {
+        Exercise(
+            name: "Tuck Sit Swing",
+            skillID: skillID,
+            description: "Swing forward from the tuck sit until your shoulders pass your wrists, then swing back. Use your core to drive the movement — not momentum. Don't let the swing get sloppy; control the arc in both directions equally.",
+            imageName: "sprite-tuck-sit-swing",
+            spriteConfig: SpriteConfig(imageName: "sprite-tuck-sit-swing", frameCount: 9, columns: 3, fps: 2),
+            reps: reps,
+            exerciseType: .repBased,
+            guide: "Use books or blocks if you don't have parallettes. To make it harder, switch the starting position from a tuck sit to an L-sit — the straight legs add more load.",
+            sets: 3,
+            summary: "A swinging movement on parallettes between a tuck sit and a forward lean. Works your core, shoulders, and hip flexors through controlled motion. The forward lean loads your shoulders the same way a planche does."
+        )
+    }
+
+    private static func tuckPushupToStraddlePlanchePushup(skillID: String) -> Exercise {
+        Exercise(
+            name: "Tuck to Straddle Pushup",
+            skillID: skillID,
+            description: "Maintain shoulder protraction and hips elevated through both the tuck and straddle positions. Control the leg extension — don't let your hips drop during the transition to straddle. Avoid collapsing at the top of the press.",
+            imageName: "sprite-tuck-pushup-to-straddle",
+            spriteConfig: SpriteConfig(imageName: "sprite-tuck-pushup-to-straddle", frameCount: 12, columns: 3, fps: 2),
+            reps: "5 rep",
+            exerciseType: .repBased,
+            guide: "Track clean reps where both the tuck descent and straddle hold are clear; increase difficulty by holding the straddle for 2–3 seconds or slowing the descent to 4 seconds. Loop a resistance band around your waist anchored above to assist when you can't maintain elevation.",
+            sets: 3,
+            summary: "Combines a tuck planche push-up with a straddle extension at the top of each rep. Targets the anterior deltoids, triceps, and serratus anterior through a dynamic press-and-extend pattern. Builds the power and body control needed to progress toward full planche push-ups."
+        )
+    }
+
+    // MARK: - Shared Stage Factories
+
+    private static func frogStandLeanStage(
+        reps: String = "5 rep",
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Frog Stand Lean",
+            description: "Keep your wrists directly below your shoulders and look slightly forward — not straight down. Engage your core as your weight shifts onto your hands. Avoid rushing the weight transfer; control is more important than speed.",
+            imageName: "frog-stand-lean",
+            guide: "Track how long you hold the forward lean before returning; increase difficulty by holding longer and reducing weight on your feet each rep. No bands needed — progress comes from controlled weight transfer.",
+            reps: reps,
+            exerciseType: .repBased,
+            nextStageCondition: nextStageCondition,
+            summary: "The entry point for wrist-supported balance training. Targets the wrists, core, and shoulder stabilisers through controlled forward weight transfer. Develops the balance awareness and wrist strength needed to progress into the full frog stand."
+        )
+    }
+
+    private static func frogStandToeTapStage(
+        reps: String = "8 rep",
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Frog Stand Toe Tap",
+            description: "Lean forward and lift one foot first — feel the balance before trying the other. Once steady, slowly lift the second foot off the ground. Don't rush — one leg at a time builds real control.",
+            guide: "Put a pillow in front of you so falling forward doesn't hurt. Start with one foot, then both; you'll fall, you'll wobble — that's normal, just don't quit.",
+            reps: reps,
+            exerciseType: .repBased,
+            spriteConfig: SpriteConfig(imageName: "sprite-frog-toe-tap", frameCount: 7, columns: 3, fps: 2),
+            nextStageCondition: nextStageCondition,
+            summary: "Learn to balance on your hands by lifting one leg at a time. Works your wrists, shoulders, and core. A safe way to build up to the full frog stand."
+        )
+    }
+
+    private static func frogStandLeanAndRaiseStage(
+        reps: String = "5 rep",
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Frog Stand Lean and Raise",
+            description: "Press through your entire palm — not just the fingers — for better stability. Slightly protract your shoulders and look slightly forward, not straight down. Avoid looking up or making sudden corrections; find the balance point with small, steady adjustments.",
+            guide: "Track how long you hold the raised position each rep — 3 seconds consistently means you're ready for the next stage; push through your entire palm for better stability. No bands needed — this is entirely about balance.",
+            reps: reps,
+            exerciseType: .repBased,
+            spriteConfig: SpriteConfig(imageName: "sprite-frog-lean-and-raise", frameCount: 8, columns: 4, fps: 2),
+            nextStageCondition: nextStageCondition,
+            summary: "Develops the ability to find and hold the frog stand balance point under control. Targets wrist extensors, serratus anterior, and core stability. Bridges the gap between a partial lean and a full sustained frog stand hold."
+        )
+    }
+
+    private static func frogStandHoldStage(
+        reps: String = "10s",
+        durationSeconds: Int = 10,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Frog Stand Hold",
+            description: "Breathe steadily and keep your core engaged — holding your breath causes tension that breaks balance. Fix your gaze on a spot about 30 cm ahead of your hands. Avoid looking up or letting your elbows flare outward.",
+            imageName: "frog-stand",
+            guide: "Track your longest unbroken hold and add 2–3 seconds per week; increase difficulty by reducing your elbow bend angle or performing on parallettes. No bands needed — progress comes from hold time and wrist strength.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "The first full wrist-supported bodyweight balance skill in calisthenics. Targets the wrist extensors, core, and shoulder stabilisers under static hold conditions. Builds the balance, wrist strength, and body awareness that serve as the foundation for all planche progressions."
+        )
+    }
+
+    private static func tuckPlancheToesAssistedStage(
+        reps: String = "10 rep",
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Tuck Raise Toes Assisted",
+            description: "Press actively through your hands and protract your shoulders — don't just balance on your toes. Keep your knees tight to your chest and breathe steadily. Avoid leaning too far forward; your hips should stay level with your shoulders.",
+            guide: "Track how lightly your toes touch the floor — the lighter, the better; try to hold completely off the floor for 1–2 seconds per set. Loop a resistance band around your waist anchored above to help maintain elevation as you reduce toe contact.",
+            reps: reps,
+            exerciseType: .repBased,
+            spriteConfig: SpriteConfig(imageName: "sprite-tuck-toes-assisted", frameCount: 9, columns: 3, fps: 2),
+            nextStageCondition: nextStageCondition,
+            summary: "The closest toe-assisted version of the tuck planche, bridging floor work and air balance. Targets the shoulder girdle and core while relying minimally on ground contact. Builds the pressing strength and balance confidence needed for a fully unsupported tuck planche."
+        )
+    }
+
+    private static func tuckPlancheSupportStage(
+        reps: String = "15s",
+        durationSeconds: Int = 15,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Tuck Planche (Support)",
+            description: "Fight for balance even with the band — it assists but doesn't replace your effort. Keep your knees tight to your chest and shoulders protracted. Avoid sitting passively on the band; your hands should be doing most of the pressing work.",
+            imageName: "tuck-parallettes",
+            guide: "Track your hold time and band thickness each session; progress by switching to thinner bands to reduce assistance. The band should make the hold achievable — not effortless.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "A resistance band-assisted tuck planche hold that reduces bodyweight load for strength development. Targets the shoulder girdle, serratus anterior, and core under assisted conditions. Allows practice of correct planche form before full bodyweight is manageable."
+        )
+    }
+
+    private static func tuckPlancheGroundStage(
+        reps: String = "15s",
+        durationSeconds: Int = 15,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Tuck Planche",
+            description: "Push the floor away aggressively and keep your shoulders protracted — passive hanging doesn't build the required strength. Keep your knees tight to your chest, core braced, and breathe steadily. Avoid letting your hips drop or your gaze drift downward.",
+            imageName: "tuck-planche-ground",
+            guide: "Track your hold time and add 1–2 seconds per week; increase difficulty by holding longer or beginning to push your hips backward. Loop a resistance band around your waist anchored above when you can't hold unassisted, and remove it once you hold cleanly for 3+ seconds.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "The first fully unassisted tuck planche — both feet off the ground. Targets the shoulder girdle, serratus anterior, and core under full bodyweight. A critical milestone demonstrating the pressing strength and balance needed to advance toward the straddle planche."
+        )
+    }
+
+    private static func advTuckHipOpenStage(
+        reps: String = "10 rep",
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Tuck to ADV hip open",
+            description: "Maintain shoulder protraction and arm lock as your hips move back — don't let them slip. Push your shoulders forward to counterbalance the extending hips. Avoid losing elevation; your hips should not drop during the transition.",
+            guide: "Track reps where you clearly control the hip open position without wobbling; increase difficulty by adding a 2-second pause in the open position. No band needed — this is a balance and mobility drill.",
+            reps: reps,
+            exerciseType: .repBased,
+            spriteConfig: SpriteConfig(imageName: "sprite-tuck-to-adv-1", frameCount: 9, columns: 3, fps: 2),
+            nextStageCondition: nextStageCondition,
+            summary: "An active drill teaching the hip extension pattern of the advanced tuck planche. Targets the shoulder girdle and core through controlled hip push-back under load. Develops the body awareness and balance control needed to hold the flat-back advanced tuck position."
+        )
+    }
+
+    private static func advTuckPumpStage(
+        reps: String = "10 rep",
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Tuck to ADV pump",
+            description: "Start in a tuck planche, then push your hips back to extend into an ADV tuck — keep your back flat and arms locked. Pull your knees back in to the tuck without letting your feet drop. Every rep should be slow and controlled — no swinging.",
+            guide: "Once the movement feels smooth, hold the ADV tuck position for 2–3 seconds before pulling back in. That pause is where the real strength gets built.",
+            reps: reps,
+            exerciseType: .repBased,
+            spriteConfig: SpriteConfig(imageName: "sprite-tuck-to-adv-2", frameCount: 9, columns: 3, fps: 2),
+            nextStageCondition: nextStageCondition,
+            summary: "A pump drill that cycles between tuck and advanced tuck planche — extend your hips out, pull them back in, feet never touch the ground. Builds the strength and control to hold the ADV tuck position longer each time."
+        )
+    }
+
+    private static func advTuckSupportStage(
+        reps: String = "10s",
+        durationSeconds: Int = 10,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "ADV Tuck Planche (Support)",
+            description: "Grip the parallettes hard, lock your arms, and protract your shoulders before the band takes any load. Push your hips as far back as possible while keeping your back parallel to the floor — this flat spine is the defining form cue. Avoid letting your hips rise above shoulder level or your lower back round.",
+            imageName: "adv-tuck-support",
+            guide: "Start with a thicker band and swap to thinner ones as you get stronger — track band color and hold time each session. If your hips sag, the band is too light; if you feel no effort, it's too heavy. Loop a resistance band around your waist anchored above to reduce load when you can't hold the flat-back position.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "The band-assisted advanced tuck planche on parallettes — your bridge to the unassisted hold. Targets the shoulder girdle, core, and hip flexors under near-full bodyweight load. Lets you practice perfect flat-back form while the band takes just enough weight off."
+        )
+    }
+
+    private static func advTuckGroundStage(
+        reps: String = "10s",
+        durationSeconds: Int = 10,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "ADV Tuck Planche (Ground)",
+            description: "Push your hips as far back as possible while keeping your back parallel to the floor — this flat spine is the defining form cue. Shoulders must be maximally protracted and arms locked straight. Avoid letting your hips rise above shoulder level or your lower back round.",
+            imageName: "adv-tuck-planche-hold",
+            guide: "Track your hold time and add 1–2 seconds per week; increase difficulty by gradually pushing your hips further back toward a straddle. Loop a resistance band around your waist anchored above to reduce load when you can't hold the flat-back position.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "An isometric hold with the back parallel to the floor — a key planche milestone. Targets the shoulder girdle, core, and hip flexors under maximum horizontal bodyweight load. Develops the scapular protraction and body tension required for the straddle planche."
+        )
+    }
+
+    private static func straddleSupportStage(
+        reps: String = "5s",
+        durationSeconds: Int = 5,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Straddle Planche (Support)",
+            description: "Grip the parallettes hard, lock your arms, and protract your shoulders before the band takes any load. Keep your shoulders maximally protracted and arms fully locked throughout — any elbow bend kills the hold. Straddle your legs wide and maintain tension in your core and glutes.",
+            imageName: "straddle-support",
+            guide: "Start with a thicker band and swap to thinner ones as you get stronger — track band color and hold time each session. If your hips sag, the band is too light; if you feel no effort, it's too heavy. Loop a resistance band around your waist anchored above to support your hips.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "The band-assisted straddle planche on parallettes — your bridge to the unassisted hold. Targets the entire shoulder girdle, core, and glutes under near-full bodyweight load. Lets you practice perfect straddle planche form while the band takes just enough weight off."
+        )
+    }
+
+    private static func straddleGroundStage(
+        reps: String = "5s",
+        durationSeconds: Int = 5,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Straddle Planche (Ground)",
+            description: "Keep your shoulders maximally protracted and arms fully locked throughout — any elbow bend kills the hold. Breathe steadily and maintain tension in your core and glutes. Avoid letting your hips sag below shoulder level.",
+            imageName: "straddle-planche-hold",
+            guide: "Track your hold time — even 1 extra second per week is excellent progress; increase difficulty by gradually bringing your legs closer together toward a full planche. Loop a resistance band around your waist anchored above to support your hips.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "An elite static hold with the body parallel to the ground and legs straddled wide. Targets the entire shoulder girdle, core, and glutes under near-maximum bodyweight load. Develops the extreme scapular protraction and body tension required for the full planche."
+        )
+    }
+
+    private static func fullPlancheWallStage(
+        reps: String = "10s",
+        durationSeconds: Int = 10,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Full Planche (Wall)",
+            description: "Stand with your back to the wall, place both hands on the floor about an arm's length away. Walk your feet up the wall and lean forward until your shoulders pass your wrists. Keep your elbows locked straight and your upper back pushed up — don't let your shoulders sag.",
+            imageName: "full-planche-wall",
+            guide: "If your wrists hurt, use parallettes or train on your fists to reduce the bend. Aim to hold for 10–15 seconds with good form before increasing difficulty. Focus on scapular protraction — push your upper back up the entire time.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "A wall-assisted full planche that teaches you to keep your body straight while loading your shoulders. Works your anterior deltoids, core, and wrists under supported conditions. The safest way to feel what a real full planche position demands."
+        )
+    }
+
+    private static func fullPlancheSupportStage(
+        reps: String = "5s",
+        durationSeconds: Int = 5,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Full Planche (Support)",
+            description: "Grip the parallettes hard, lock your arms, and protract your shoulders before the band takes any load. Keep your body ruler-straight — hips level with shoulders, legs together, toes pointed. Don't let the band become a hammock; you should be fighting to hold position, not resting.",
+            imageName: "full-planche-support",
+            guide: "Start with a thicker band and swap to thinner ones as you get stronger — track band color and hold time each session. If your hips sag, the band is too light; if you feel no effort, it's too heavy. You're closer than you think — trust the process.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "The band-assisted full planche on parallettes — your bridge to the real thing. Targets the entire shoulder girdle, core, and glutes under near-full bodyweight load. Lets you practice perfect planche form while the band takes just enough weight off."
+        )
+    }
+
+    private static func fullPlancheGroundStage(
+        reps: String = "5s",
+        durationSeconds: Int = 5,
+        nextStageCondition: String = ""
+    ) -> ExerciseStage {
+        ExerciseStage(
+            name: "Full Planche (Ground)",
+            description: "Lean forward aggressively, lock your arms, and protract your shoulders as hard as you can — then hold on. Keep your entire body in one straight line — no hip sag, no piking, legs together and toes pointed. Breathe steadily and focus on pushing the ground away from you.",
+            imageName: "full-planche",
+            guide: "Even 1 second is a win — track every attempt and celebrate the gains. Film yourself from the side to check your line; what feels flat might not be. You made it here — this is the top of the mountain.",
+            reps: reps,
+            durationSeconds: durationSeconds,
+            exerciseType: .timed,
+            nextStageCondition: nextStageCondition,
+            summary: "The real deal — full planche on the floor with nothing but your hands and willpower. Targets every muscle from fingertips to toes under maximum bodyweight load. This is where all those months of training pay off."
+        )
+    }
+
+    // Shares content with advTuckGroundStage() to keep descriptions synced
+    private static func advTuckHold(skillID: String) -> Exercise {
+        let stage = advTuckGroundStage()
+        return Exercise(
+            name: "ADV Tuck Hold",
+            skillID: skillID,
+            description: stage.description,
+            imageName: stage.imageName,
+            reps: "10s",
+            repsByDifficulty: [.starter: "10s", .standard: "10s", .solid: "10s"],
+            durationSeconds: 10,
+            exerciseType: .timed,
+            guide: stage.guide,
+            sets: 3,
+            summary: stage.summary
+        )
+    }
+
+    private static func straddlePlancheHold(skillID: String) -> Exercise {
+        Exercise(
+            name: "Straddle Planche Hold",
+            skillID: skillID,
+            description: "Keep your shoulders maximally protracted and arms fully locked throughout — any elbow bend kills the hold. Breathe steadily and maintain tension in your core and glutes. Avoid letting your hips sag below shoulder level.",
+            imageName: "straddle-planche-hold",
+            reps: "5s",
+            repsByDifficulty: [.starter: "5s", .standard: "5s", .solid: "5s"],
+            durationSeconds: 5,
+            exerciseType: .timed,
+            guide: "Track your hold time — even 1 extra second per week is excellent progress; increase difficulty by gradually bringing your legs closer together toward a full planche. Loop a resistance band around your waist anchored above to support your hips.",
+            sets: 3,
+            summary: "An elite static hold with the body parallel to the ground and legs straddled wide. Targets the entire shoulder girdle, core, and glutes under near-maximum bodyweight load. Develops the extreme scapular protraction and body tension required for the full planche."
+        )
+    }
 }

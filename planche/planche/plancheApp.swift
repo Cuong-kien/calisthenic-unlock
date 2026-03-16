@@ -48,7 +48,7 @@ enum PlancheSchemaV1: VersionedSchema {
 enum PlancheSchemaV2: VersionedSchema {
     static var versionIdentifier = Schema.Version(2, 0, 0)
     static var models: [any PersistentModel.Type] {
-        [TrainingSession.self, UserProgress.self, ExerciseCustomization.self, ActiveProgram.self, UserProfile.self]
+        [TrainingSession.self, UserProgress.self, ExerciseCustomization.self, ActiveProgram.self, UserProfile.self, StageProgress.self]
     }
 }
 

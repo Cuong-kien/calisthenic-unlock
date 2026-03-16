@@ -39,6 +39,7 @@ struct ContentView: View {
             UserProgress.self,
             ExerciseCustomization.self,
             ActiveProgram.self,
-            UserProfile.self
+            UserProfile.self,
+            StageProgress.self
         ], inMemory: true)
 }

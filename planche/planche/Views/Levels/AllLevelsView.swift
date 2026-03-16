@@ -58,7 +58,7 @@ struct AllLevelsView: View {
 
                         if isPremiumLocked {
                             Button {
-                                showPaywall = true
+                                previewSkill = skill
                             } label: {
                                 SkillRow(skill: skill, isPremiumLocked: true, isActive: false, isCompleted: false)
                             }
@@ -93,7 +93,17 @@ struct AllLevelsView: View {
                 onSelect: { selectedSkill in
                     previewSkill = nil
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                        navigationState.processRoute = .skillDetail(selectedSkill)
+                        if selectedSkill.requiresSubscription && !storeManager.isSubscribed {
+                            showPaywall = true
+                        } else {
+                            navigationState.processRoute = .skillDetail(selectedSkill)
+                        }
+                    }
+                },
+                onTryPrevious: { prevSkill in
+                    previewSkill = nil
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+                        previewSkill = prevSkill
                     }
                 },
                 onDismiss: {

@@ -214,6 +214,10 @@ struct LevelDetailView: View {
     }
 
     private func currentReps(for exercise: Exercise) -> String {
+        if let stages = exercise.stages, !stages.isEmpty {
+            return "\(stages.count) stages / \(exercise.sets) sets"
+        }
+
         let diff: Difficulty? = skill.id == "foundation" ? selectedDifficulty : nil
         let lookupDiff = exercise.skillID == "foundation" ? diff : nil
 

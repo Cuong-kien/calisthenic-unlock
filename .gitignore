@@ -1,2 +1,20 @@
+# macOS
 .DS_Store
+
+# Xcode user data
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# Build artifacts
+DerivedData/
+build/
+
+# Claude
 .claude/
+
+# Wireframe reference images (large files, not source)
+wireframe/
+
+# Nested stale xcodeproj (real one is at root: planche.xcodeproj)
+planche/planche.xcodeproj/

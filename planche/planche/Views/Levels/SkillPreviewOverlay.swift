@@ -4,6 +4,7 @@ import SwiftData
 struct SkillPreviewOverlay: View {
     let skill: Skill
     let onSelect: (Skill) -> Void
+    let onTryPrevious: (Skill) -> Void
     let onDismiss: () -> Void
 
     @Environment(\.modelContext) private var modelContext
@@ -28,6 +29,10 @@ struct SkillPreviewOverlay: View {
     }
 
     private func selectSkill(_ selectedSkill: Skill) {
+        if selectedSkill.requiresSubscription {
+            onSelect(selectedSkill)
+            return
+        }
         if hasActiveOtherProgram && selectedSkill.id == skill.id {
             showSwitchAlert = true
         } else {
@@ -37,7 +42,9 @@ struct SkillPreviewOverlay: View {
     }
 
     private func confirmSwitch() {
-        ProgressManager(modelContext: modelContext).setActiveProgram(skill: skill)
+        if !skill.requiresSubscription {
+            ProgressManager(modelContext: modelContext).setActiveProgram(skill: skill)
+        }
         onSelect(skill)
     }
 
@@ -111,6 +118,21 @@ struct SkillPreviewOverlay: View {
                 Spacer()
 
                 if previousNotRecommended {
+                    if let prevID = skill.recommendedPreviousSkillID,
+                       let prevSkill = SkillCatalog.shared.skill(for: prevID) {
+                        Button {
+                            onTryPrevious(prevSkill)
+                        } label: {
+                            Text("Try \(prevSkill.displayName) first")
+                                .font(.headline)
+                                .foregroundStyle(.blue)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 16)
+                                .background(Color(.systemGray5))
+                                .clipShape(RoundedRectangle(cornerRadius: 14))
+                        }
+                    }
+
                     Button {
                         selectSkill(skill)
                     } label: {
@@ -121,21 +143,6 @@ struct SkillPreviewOverlay: View {
                             .padding(.vertical, 16)
                             .background(Color.blue)
                             .clipShape(RoundedRectangle(cornerRadius: 14))
-                    }
-
-                    if let prevID = skill.recommendedPreviousSkillID,
-                       let prevSkill = SkillCatalog.shared.skill(for: prevID) {
-                        Button {
-                            onSelect(prevSkill)
-                        } label: {
-                            Text("Try \(prevSkill.displayName) first")
-                                .font(.headline)
-                                .foregroundStyle(.blue)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                                .background(Color(.systemGray5))
-                                .clipShape(RoundedRectangle(cornerRadius: 14))
-                        }
                     }
                 } else {
                     Button {
@@ -182,6 +189,7 @@ struct SkillPreviewOverlay: View {
         "tuckPlanche": "tuck-parallettes",
         "advTuckPlanche": "preview-adv-tuck-planche",
         "straddlePlanche": "straddle-planche-hold",
+        "fullPlanche": "full-planche",
     ]
 
     private var heroImage: some View {

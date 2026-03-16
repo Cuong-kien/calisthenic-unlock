@@ -29,8 +29,11 @@ struct TrainingView: View {
     @State private var detailExercise: Exercise? = nil
     @State private var currentExerciseStageIndex = 0
     @State private var sessionDuration: TimeInterval = 0
+    @State private var showStageProgress = false
+    @Query private var allStageProgress: [StageProgress]
 
-    private let restDuration = 45
+    @State private var restDuration = 45
+    @State private var showRestPicker = false
 
     private var exercises: [Exercise] {
         SkillCatalog.shared.exercises(for: skill.id)
@@ -178,6 +181,22 @@ struct TrainingView: View {
                 ExerciseDetailView(exercise: exercise, difficulty: difficulty)
             }
         }
+        .sheet(isPresented: $showRestPicker) {
+            RestDurationPicker(restDuration: $restDuration, timeRemaining: $timeRemaining, totalPhaseTime: $totalPhaseTime)
+                .presentationDetents([.height(280)])
+        }
+        .sheet(isPresented: $showStageProgress) {
+            if let stage = currentExerciseStage {
+                StageProgressOverlay(
+                    exerciseName: exercises[currentIndex].name,
+                    skillID: skill.id,
+                    stageIndex: currentExerciseStageIndex,
+                    stageName: stage.name,
+                    isTimedStage: stage.exerciseType == .timed
+                )
+                .presentationDetents([.fraction(0.4)])
+            }
+        }
     }
 
     // MARK: - Progress Bar
@@ -293,6 +312,14 @@ struct TrainingView: View {
 
     // MARK: - Exercise Info Section
 
+    private func stageProgressRecord(for exercise: Exercise) -> StageProgress? {
+        allStageProgress.first { p in
+            p.exerciseName == exercise.name
+            && p.skillID == skill.id
+            && p.stageIndex == currentExerciseStageIndex
+        }
+    }
+
     private func exerciseInfoSection(exercise: Exercise) -> some View {
         VStack(alignment: .leading, spacing: 0) {
             HStack(spacing: 8) {
@@ -300,7 +327,7 @@ struct TrainingView: View {
                     .font(.title3).fontWeight(.bold)
                 Button { detailExercise = exercise } label: {
                     Image(systemName: "info.circle")
-                        .font(.body).foregroundStyle(.secondary)
+                        .font(.body).foregroundStyle(.primary)
                 }
                 Spacer()
             }
@@ -317,26 +344,51 @@ struct TrainingView: View {
             .padding(.horizontal, 20)
             .padding(.top, 8)
 
+            if currentExerciseStage != nil {
+                Text("To Failure")
+                    .font(.subheadline).fontWeight(.semibold)
+                    .foregroundStyle(Color.blue)
+                    .padding(.horizontal, 20)
+                    .padding(.top, 8)
+            }
+
             if let condition = currentExerciseStage?.nextStageCondition, !condition.isEmpty {
                 Text(condition)
                     .font(.subheadline).foregroundStyle(Color.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 20)
-                    .padding(.top, 12)
+                    .padding(.top, 4)
+            }
+
+            if currentExerciseStage != nil {
+                let record = stageProgressRecord(for: exercise)
+                let value = record?.currentValue ?? 0
+
+                Button { showStageProgress = true } label: {
+                    HStack(spacing: 6) {
+                        Text("progress:")
+                            .font(.subheadline)
+                            .foregroundStyle(Color(.secondaryLabel))
+                        Text("\(value)")
+                            .font(.subheadline).fontWeight(.semibold)
+                            .foregroundStyle(.primary)
+                        Image(systemName: "pencil")
+                            .font(.system(size: 13))
+                            .foregroundStyle(Color(.secondaryLabel))
+                        Spacer()
+                    }
+                    .padding(.vertical, 14)
+                    .padding(.horizontal, 20)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
             }
 
             Spacer()
 
             Group {
-                if let stage = currentExerciseStage {
-                    if stage.exerciseType == .timed {
-                        Text(timerText)
-                            .font(.system(size: 64, weight: .bold, design: .monospaced))
-                    } else {
-                        Text(stage.reps)
-                            .font(.system(size: 64, weight: .bold, design: .monospaced))
-                            .foregroundStyle(Color.blue)
-                    }
+                if currentExerciseStage != nil {
+                    EmptyView()
                 } else if exercise.exerciseType == .timed {
                     Text(timerText)
                         .font(.system(size: 64, weight: .bold, design: .monospaced))
@@ -388,15 +440,17 @@ struct TrainingView: View {
                 Spacer()
 
                 HStack(spacing: 12) {
-                    Button {
-                        timeRemaining += 15
-                        totalPhaseTime += 15
-                    } label: {
-                        Text("+15s")
-                            .font(.headline).fontWeight(.bold).foregroundStyle(.primary)
-                            .frame(maxWidth: .infinity).frame(height: 52)
-                            .background(Color(.secondarySystemBackground))
-                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                    Button { showRestPicker = true } label: {
+                        HStack(spacing: 4) {
+                            Image(systemName: "timer")
+                                .font(.subheadline)
+                            Text("\(restDuration)s")
+                                .font(.headline).fontWeight(.bold)
+                        }
+                        .foregroundStyle(.primary)
+                        .frame(maxWidth: .infinity).frame(height: 52)
+                        .background(Color(.secondarySystemBackground))
+                        .clipShape(RoundedRectangle(cornerRadius: 14))
                     }
 
                     Button { skipRest() } label: {
@@ -412,6 +466,7 @@ struct TrainingView: View {
                 Spacer().frame(height: 16)
 
                 if let next = nextExercise {
+                    let isStageExercise = next.stages != nil && !(next.stages!.isEmpty)
                     VStack(alignment: .leading, spacing: 6) {
                         if isLastSet {
                             Text("Next")
@@ -422,17 +477,17 @@ struct TrainingView: View {
                                 Text(next.name).font(.headline).fontWeight(.bold)
                                 Button { detailExercise = next } label: {
                                     Image(systemName: "info.circle")
-                                        .font(.body).foregroundStyle(.secondary)
+                                        .font(.body).foregroundStyle(.primary)
                                 }
                             }
                             Spacer()
-                            if isLastSet {
+                            if isLastSet && !isStageExercise {
                                 let m = CustomizationManager(modelContext: modelContext)
                                 Text(m.effectiveDisplayText(for: next, difficulty: difficulty))
                                     .font(.headline).fontWeight(.bold)
                             }
                         }
-                        if !isLastSet {
+                        if !isLastSet && !isStageExercise {
                             HStack(spacing: 8) {
                                 ForEach(1...(next.sets), id: \.self) { s in
                                     Circle()
@@ -494,17 +549,11 @@ struct TrainingView: View {
         isPaused = false
         stopTimer()
 
-        let isTimedStage = currentExerciseStage?.exerciseType == .timed
-        let isTimedExercise = exercise.exerciseType == .timed
-        if isTimedStage || (currentExerciseStage == nil && isTimedExercise) {
-            let duration: Int
-            if let stage = currentExerciseStage {
-                duration = stage.durationSeconds
-            } else {
-                let manager = CustomizationManager(modelContext: modelContext)
-                let diff = exercise.skillID == "foundation" ? difficulty : nil
-                duration = manager.effectiveDuration(for: exercise, difficulty: diff)
-            }
+        // Stages: no auto-timer — user taps "Take the Rest" / "Finish" manually
+        if currentExerciseStage == nil, exercise.exerciseType == .timed {
+            let manager = CustomizationManager(modelContext: modelContext)
+            let diff = exercise.skillID == "foundation" ? difficulty : nil
+            let duration = manager.effectiveDuration(for: exercise, difficulty: diff)
             totalPhaseTime = duration
             timeRemaining = duration
             startCountdownTimer()
@@ -597,6 +646,46 @@ struct TrainingView: View {
             }
         } else {
             showCompletion = true
+        }
+    }
+}
+
+// MARK: - Rest Duration Picker
+
+private struct RestDurationPicker: View {
+    @Binding var restDuration: Int
+    @Binding var timeRemaining: Int
+    @Binding var totalPhaseTime: Int
+    @Environment(\.dismiss) private var dismiss
+
+    private let options = [30, 45, 60, 90, 120]
+
+    var body: some View {
+        VStack(spacing: 20) {
+            Text("Rest Duration")
+                .font(.title3).fontWeight(.semibold)
+                .padding(.top, 24)
+
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3), spacing: 12) {
+                ForEach(options, id: \.self) { seconds in
+                    Button {
+                        restDuration = seconds
+                        totalPhaseTime = seconds
+                        timeRemaining = seconds
+                        dismiss()
+                    } label: {
+                        Text("\(seconds)s")
+                            .font(.headline).fontWeight(.bold)
+                            .foregroundStyle(seconds == restDuration ? .white : .primary)
+                            .frame(maxWidth: .infinity).frame(height: 52)
+                            .background(seconds == restDuration ? Color.blue : Color(.tertiarySystemBackground))
+                            .clipShape(RoundedRectangle(cornerRadius: 14))
+                    }
+                }
+            }
+            .padding(.horizontal, 20)
+
+            Spacer()
         }
     }
 }

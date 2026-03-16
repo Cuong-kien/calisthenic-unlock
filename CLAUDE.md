@@ -1,6 +1,6 @@
 # Planche Fitness
 
-> SwiftUI iOS app for progressive calisthenics skill training. Users choose a target skill (e.g. Planche, Handstand, Front Lever) and follow a structured level-based program to reach it.
+> SwiftUI iOS app for progressive calisthenics skill training. Architecture: **SkillGroup > Skill** hierarchy supporting multiple skill groups (Planche, Handstand, Front Lever, etc.). Users pick an active program (skill), track hold-time progress, and follow structured workouts.
 
 ## Stack
 
@@ -18,80 +18,140 @@ xcodebuild -project planche.xcodeproj -scheme planche -destination 'platform=iOS
 
 ```
 planche/planche/
-├── plancheApp.swift          — @main, ModelContainer (TrainingSession, UserProgress, ExerciseCustomization)
+├── plancheApp.swift          — @main, ModelContainer, VersionedSchema + SchemaMigrationPlan (V1→V2)
 ├── ContentView.swift         — wraps MainTabView
+├── AppDelegate.swift         — UIApplicationDelegate adapter
+├── Extensions/
+│   └── Color+Extensions.swift — Color(hex:), Color.trainingBlue, Color.secondary
 ├── Models/
-│   ├── Level.swift           — Level enum (7 levels), Color(hex:), Color.trainingBlue
-│   ├── Exercise.swift        — Exercise struct: name, level, reps, sets, durationSeconds, exerciseType, repsByDifficulty
-│   ├── ProgressiveExercise.swift — ExerciseStage (SpriteConfig optional) + ProgressiveExercise (4 stages)
-│   ├── ExerciseCustomization.swift — SwiftData: custom reps/duration per exercise
-│   ├── TrainingSession.swift — SwiftData: completed session record
-│   └── UserProgress.swift    — SwiftData: per-level session count
+│   ├── SkillGroup.swift      — SkillGroup struct (id, displayName, iconName, skillIDs)
+│   ├── Skill.swift           — Skill struct (replaces Level enum): id, groupID, displayName, etc.
+│   ├── ActiveProgram.swift   — SwiftData: active program (skillID, groupID, currentProgressSeconds, isCompleted)
+│   ├── Exercise.swift        — Exercise struct: name, skillID, reps, sets, category, videoName
+│   ├── ProgressiveExercise.swift — ExerciseStage (SpriteConfig optional)
+│   ├── ExerciseCustomization.swift — SwiftData: custom reps/duration per exercise (keyed by skillID)
+│   ├── TrainingSession.swift — SwiftData: completed session (skillID, groupID, date, completed, duration)
+│   ├── UserProgress.swift    — SwiftData: currentSkillID
+│   ├── UserProfile.swift     — SwiftData: user profile data
+│   └── Level.swift           — Legacy Level enum (kept for reference)
 ├── Managers/
-│   ├── ExerciseStore.swift       — Static data: exercises + skillProgressions per Level
-│   ├── ProgressManager.swift     — Unlock logic (5 sessions), completeSession, currentLevel
-│   └── CustomizationManager.swift — effectiveReps/effectiveDuration/effectiveDisplayText
+│   ├── SkillCatalog.swift        — Static catalog: skill/exercise lookup, group iteration, nextSkill()
+│   ├── SkillData/
+│   │   └── PlancheSkillData.swift — All planche skills + exercises (extracted from old ExerciseStore)
+│   ├── ProgressManager.swift     — Active program CRUD, progress %, calendar dates, soft recommendations
+│   ├── CustomizationManager.swift — effectiveReps/effectiveDuration/effectiveDisplayText
+│   ├── StoreManager.swift        — In-app subscription management
+│   ├── AdManager.swift           — Interstitial ad loading & display for free users
+│   ├── AuthManager.swift         — Authentication state
+│   └── ExerciseStore.swift       — Legacy static data (superseded by SkillCatalog)
 ├── Views/
-│   ├── MainTabView.swift         — AppRoute enum, NavigationState ObservableObject, 3-tab custom tab bar
+│   ├── MainTabView.swift         — AppRoute enum (.skillDetail, .training), NavigationState, 3-tab tab bar
 │   ├── SpriteAnimationView.swift — SpriteConfig + GeometryReader frame animator (async Task loop)
-│   ├── Home/HomeView.swift       — Progress ring, current level card, start training button
+│   ├── VideoLoopView.swift       — Looping AVPlayer video view
+│   ├── Home/
+│   │   ├── HomeView.swift        — Greeting, WeekStripView, ActiveProgramCard or NoProgramCard, RecommendSection
+│   │   └── UpdateProgressModal.swift — Hold-time picker + requirements checklist + Save
 │   ├── Levels/
-│   │   ├── AllLevelsView.swift        — Level list with lock status
-│   │   ├── LevelDetailView.swift      — Exercises + Skills sections, difficulty picker (Foundation only)
+│   │   ├── AllLevelsView.swift        — Skill list from SkillCatalog, premium/recommendation gating
+│   │   ├── LevelDetailView.swift      — Exercises list, difficulty picker, Start Training
+│   │   ├── SkillPreviewOverlay.swift  — Soft recommendation overlay (Keep Select / Try previous first)
 │   │   ├── ExerciseDetailView.swift   — Full-bleed image, +/- reps/duration customization
-│   │   ├── SkillProgressionView.swift — 4-stage tab pills, SpriteAnimationView per stage (info only)
-│   │   ├── TrainingView.swift         — countdown → exercise(set loop) → rest → navigationDestination to SkillTrainingView
-│   │   ├── SkillTrainingView.swift    — stage tabs, global 3-session counter, rest timer, condition tips
-│   │   └── SkillCompleteView.swift    — completion screen pushed after all 3 skill sets; "Done" → popToRoot
-│   └── Settings/SettingsView.swift   — Reset progress, app info
+│   │   ├── TrainingView.swift         — countdown → exercise (set loop) → rest → TrainingCompleteView
+│   │   └── TrainingCompleteView.swift — Completion screen; "Done" → navigationState.popToRoot = true
+│   ├── Onboarding/OnboardingView.swift — First-launch onboarding flow
+│   ├── Paywall/PaywallView.swift     — Subscription paywall
+│   ├── Auth/SignInView.swift         — Sign-in screen
+│   ├── Ads/
+│   │   ├── BannerAdView.swift        — Banner ad component
+│   │   └── InterstitialAdPresenter.swift — Full-screen ad presenter
+│   ├── Calendar/CalendarView.swift   — Training calendar view
+│   └── Settings/
+│       ├── SettingsView.swift        — Calendar, stats, app info
+│       └── NotificationSettingsView.swift — Notification preferences
 └── Assets.xcassets/
-    ├── sprite-frog-toe-tap.imageset        — 7 frames, 3 cols
-    ├── sprite-frog-lean-and-raise.imageset — 8 frames, 4 cols
-    ├── sprite-frog-raise.imageset          — orphaned/unused (can delete)
-    └── sprite-pseudo-planche-pushup.imageset
 ```
 
-## Skills & Levels
+## Model Hierarchy: SkillGroup > Skill
 
-Each **Skill** (e.g. Planche, Handstand, Front Lever) has its own level progression. The current planche skill has 7 levels:
+**SkillGroup** — groups related skills (e.g. "Planche" contains 6 skills)
+**Skill** — individual progression level (replaces old `Level` enum). Skill IDs match old Level rawValues for data continuity.
 
-| rawValue | displayName | color |
-|---|---|---|
-| `foundation` | Base | `#067D41` green |
-| `foundation2` | Frog Stand | `#067D41` green |
-| `leanPlanche` | Lean Planche | `#0B67EC` blue |
-| `tuckPlanche` | Tuck Planche | `#6E47EF` purple |
-| `advTuckPlanche` | ADV Tuck Planche | `#E67E22` orange |
-| `straddlePlanche` | Straddle Planche | `#A21832` red |
-| `fullPlanche` | Full Planche | `#0D0D0D` black |
+| Skill ID | displayName | group | progressGoalSeconds |
+|---|---|---|---|
+| `foundation` | Base | planche | 45s |
+| `foundation2` | Frog Stand | planche | 15s |
+| `tuckPlanche` | Tuck Planche | planche | 10s |
+| `advTuckPlanche` | ADV Tuck Planche | planche | 10s |
+| `straddlePlanche` | Straddle Planche | planche | 5s |
+| `fullPlanche` | Full Planche | planche | 3s |
 
-`foundation` and `foundation2` always unlocked. Others unlock after 5 sessions on `previousLevel`.
+## Unlock Logic
 
-**Future direction**: `ExerciseStore` and `Level` will be refactored to support multiple skills. Each skill will have its own level set, exercise list, and skill progressions. The home screen will let the user pick which skill to train.
+- **All skills are freely accessible** — no hard locks based on previous completion
+- **Soft recommendations**: `Skill.recommendedPreviousSkillID` provides a hint. `SkillPreviewOverlay` shows "Keep Select" + "Try X first" when previous skill progress is incomplete
+- **Subscription gating**: `Skill.requiresSubscription` (straddlePlanche, fullPlanche) requires active subscription
+
+## Exercise Categorization
+
+```swift
+enum ExerciseCategory: String, Codable {
+    case supplementary  // general exercises — visible in future exercise library
+    case specialized    // skill-specific — internal only
+}
+```
+Currently all exercises default to `.supplementary`. Category is backend-only; training views show all exercises for a skill.
 
 ## Key Architecture
 
-- **Navigation**: `AppRoute` enum (`.levelDetail`, `.training`) pushed onto `NavigationPath` in `MainTabView`. Tab bar auto-hides when path is non-empty.
-- **Exercises**: `ExerciseStore.shared` — static, non-persisted. `foundation2` has custom exercises; all others use 10 shared templates. Each exercise has `sets: Int = 3` (default).
-- **Training flow**: `TrainingPhase` — `.countdown` (5s) → `.exercise` → `.resting` (45s). `currentSet` + `isLastSet` drive the set loop. After last exercise: completion alert (no skills) or `.navigationDestination` to `SkillTrainingView` (has skills).
-- **Last-exercise button**: always blue. Label = `"Finish"` when no skill follows (`skillProgressions.isEmpty`); `"Take the Rest"` otherwise.
-- **Skill training flow**: `SkillTrainingPhase` — `.exercise` → `.resting` (45s). Global counter `totalSessions = 3` (any mix of stages). After 3 completions → `SkillCompleteView` pushed via `.navigationDestination`. "Done" → `navigationState.popToRoot = true`.
-- **Navigation reset**: `NavigationState` (`ObservableObject`, `@Published var popToRoot: Bool`) via `@EnvironmentObject`. `MainTabView` resets both `homePath` and `processPath` to `NavigationPath()` on `popToRoot = true`.
-- **Skill data**: Only `.foundation2` has skill progressions (Frog Stand, 4 stages). `ExerciseStage.nextStageCondition` shown as tip in `SkillTrainingView`.
-- **Customization**: `ExerciseCustomization` (SwiftData) keyed by `(exerciseName, levelRawValue, difficultyRawValue?)`. `CustomizationManager` instantiated per-view.
-- **Difficulty**: Only `foundation` uses `Difficulty` (starter/standard/solid). Others pass `difficulty: nil`.
-- **Sprites**: `SpriteConfig(imageName:frameCount:columns:fps:)`. `SpriteAnimationView` uses `UIImage(named:)` for `frameAspectRatio` then `.aspectRatio(contentMode: .fit).frame(maxWidth: .infinity)` on `GeometryReader`. Default fps = 2.
-- **Colors**: `Color.trainingBlue = #035CD5`. Tab bar selected tint `#5EABF7`.
+- **Navigation**: `AppRoute` enum (`.skillDetail(Skill)`, `.training(Skill, difficulty:)`) pushed onto `NavigationPath`. Tab bar hides when any path is non-empty.
+- **Tabs (3)**: Home (tag 0) · Process/AllLevels (tag 1) · Settings (tag 2)
+- **SkillCatalog**: `SkillCatalog.shared` — singleton providing `skill(for:)`, `exercises(for:)`, `skills(in:)`, `nextSkill(after:)`, `allSkills()`. Data lives in `SkillData/` extension files.
+- **Active Program**: Single `ActiveProgram` SwiftData record. `ProgressManager.setActiveProgram(skill:)` replaces it. Progress = hold seconds / `skill.progressGoalSeconds` × 100. At 100% → `isCompleted = true` → home shows `RecommendSection` with next skill.
+- **Training flow**: `TrainingPhase` — `.countdown` (5s) → `.exercise` → `.resting` (45s). Set loop driven by `currentSet` + `isLastSet`. After last exercise → `TrainingCompleteView`.
+- **Navigation reset**: `NavigationState` (`ObservableObject`, `@Published var popToRoot: Bool`) via `@EnvironmentObject`. `MainTabView` resets `homePath`, `processPath` on `popToRoot = true`.
+- **Customization**: `ExerciseCustomization` (SwiftData) keyed by `(exerciseName, skillID, difficultyRawValue?)`. `CustomizationManager` instantiated per-view.
+- **Difficulty**: Only `foundation` skill uses `Difficulty` (starter/standard/solid). Others pass `difficulty: nil`.
+- **Sprites**: `SpriteConfig(imageName:frameCount:columns:fps:)`. Default fps = 2.
+- **Ads**: Free users see `BannerAdView` during rest and interstitial ads on session complete/quit. `AdManager` preloads interstitials on training start.
+- **Subscriptions**: `StoreManager` manages in-app purchase state. `isSubscribed` gates premium skills and ad removal.
+- **Colors**: `Color.trainingBlue = #035CD5`. Tab bar selected tint `#5EABF7`. `Color.secondary = #CCCCCC` (defined in `Extensions/Color+Extensions.swift` — use `Color.secondary` for all body/label/description text; never hardcode `Color(hex: "CCCCCC")` inline).
+- **Theme-adaptive colors (MANDATORY)**: The app supports light and dark themes. **Never hardcode hex colors from Figma for UI chrome.** Always map to system-adaptive equivalents:
+
+  | Figma hex (dark theme) | Use instead |
+  |---|---|
+  | `#191919`, `#1C1C1E`, dark backgrounds | `Color(.secondarySystemBackground)` |
+  | `#2C2C2E`, `#2C2C2C`, inner card backgrounds | `Color(.tertiarySystemBackground)` |
+  | `#F2F2F7`, light button backgrounds | `Color(.tertiarySystemBackground)` |
+  | `white.opacity(0.1)`, `white.opacity(0.15)` overlays | `Color(.tertiarySystemBackground)` |
+  | `white.opacity(0.2)`, thin dividers | `Color(.separator)` |
+  | `#8E8E93`, `#666666`, secondary text | `Color(.secondaryLabel)` |
+  | `#FFFFFF` / `.white` for text on dark bg | `.primary` (unless on a colored button — keep `.white`) |
+  | `#0061EB`, brand blue | `Color.blue` (system adaptive) |
+  | `#34C759`, success green | `Color.green` (system adaptive) |
+  | `#FF3B30`, error red | `Color.red` (system adaptive) |
+  | Border strokes from Figma | `Color(.separator)` |
+  | `#3A3A3C`, `#48484A`, gray tracks | `Color(.systemGray5)` |
+
+  Exception: `Color.trainingBlue` (#035CD5) is an intentional brand color — keep as-is.
+- **SwiftData Migration**: `PlancheSchemaV1` → `PlancheSchemaV2` via `PlancheMigrationPlan`. V1 used `levelRawValue`/`currentLevelRawValue`, V2 uses `skillID`/`currentSkillID` + `groupID`. Migration clears old data; fallback deletes store on failure.
 
 ## Key Patterns
 
 - `ProgressManager(modelContext:)` / `CustomizationManager(modelContext:)` — instantiated per-view (not singletons)
-- SwiftData models: `TrainingSession`, `UserProgress`, `ExerciseCustomization`
-- Non-persisted structs: `Exercise`, `ProgressiveExercise`, `ExerciseStage`, `SpriteConfig`
-- Tab bar hidden on push: `tabBarVisible = homePath.isEmpty && processPath.isEmpty`
+- `SkillCatalog.shared` — static singleton for skill/exercise data lookup
+- SwiftData models: `TrainingSession`, `UserProgress`, `ExerciseCustomization`, `ActiveProgram`, `UserProfile`
+- Non-persisted structs: `Skill`, `SkillGroup`, `Exercise`, `ExerciseStage`, `SpriteConfig`
 - Font sizes: `.font(.system(size: 13))` not `.font(.caption)` for 13pt
 - Subtitle format: `"30s × 3 sets"` or `"10 rep × 3 sets"`
 - All training screens: `.navigationBarBackButtonHidden(true)` + `.navigationBarHidden(true)`
+- `resetProgress()` clears all 4 SwiftData models including `ActiveProgram`
+
+## Adding a New Skill Group
+
+1. Create `Managers/SkillData/<SkillName>SkillData.swift`
+2. Add `extension SkillCatalog` with `static let <name>Group`, `<name>Skills`, `<name>Exercises`
+3. Register in `SkillCatalog.init()`: add group to `allGroups`, skills to `sMap`, exercises to `exerciseMap`
+4. Done — views automatically iterate `SkillCatalog.shared.groups`
 
 ## Assets & Image Prompts
 
@@ -101,11 +161,12 @@ Prompts in `/Users/daokiencuong/Desktop/Planche/json prompt/` (outside Xcode pro
 
 ## App Direction
 
-The app is expanding from planche-only to a **multi-skill calisthenics trainer**:
-- User selects a skill goal (Planche, Handstand, Front Lever, etc.) on first launch or from settings
-- Each skill has its own independent level progression, exercises, and skill stages
-- The existing planche program is the first/reference skill — architecture should be generalized to support others
-- `Level`, `ExerciseStore`, and progression logic will eventually be scoped per-skill
+The app has been refactored from planche-only to a **multi-skill calisthenics platform**:
+- Architecture supports multiple skill groups (Planche, Handstand, Front Lever, Dragon Flag, etc.)
+- Each skill group contains ordered skills with independent progressions, exercises, and stages
+- Planche is the first/reference skill group — fully implemented
+- Adding new skill groups requires only creating a single data file + registering in `SkillCatalog.init()`
+- All skills are freely accessible (no hard locks) with soft previous-skill recommendations
 
 ## Notes
 <!-- Preserve any existing content from this section exactly as-is -->
