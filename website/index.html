@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planche — Unlock Your Calisthenics Skills</title>
+  <meta name="description" content="Collect badges, unlock skills, and level up your calisthenics journey. From Frog Stand to Full Planche — every skill is an achievement waiting to be earned.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #035CD5;
+      --primary-light: #5EABF7;
+      --primary-glow: rgba(3, 92, 213, 0.4);
+      --accent: #5EABF7;
+      --accent-glow: rgba(94, 171, 247, 0.3);
+      --gold: #F2C769;
+      --gold-glow: rgba(242, 199, 105, 0.3);
+      --bg-dark: #0A0E17;
+      --bg-section: #0F1520;
+      --bg-card: #151C2B;
+      --bg-card-hover: #1A2338;
+      --text-primary: #F1F5F9;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border: rgba(255,255,255,0.08);
+      --font-heading: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { border: none; cursor: pointer; font-family: inherit; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* ── Navbar ── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 50;
+      padding: 0 1.5rem;
+      transition: background 0.3s, backdrop-filter 0.3s;
+    }
+    .navbar.scrolled {
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 0.02em;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon svg { width: 20px; height: 20px; }
+    .nav-links { display: flex; gap: 2rem; align-items: center; }
+    .nav-links a {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text-primary); }
+    .nav-cta {
+      background: var(--primary);
+      color: white !important;
+      padding: 0.6rem 1.25rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-cta:hover { background: #0470F5; transform: translateY(-1px); }
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      color: var(--text-primary);
+      padding: 0.5rem;
+    }
+    .mobile-menu-btn svg { width: 24px; height: 24px; }
+
+    /* ── Hero ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 7rem 1.5rem 4rem;
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, var(--primary-glow), transparent 70%);
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; left: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, var(--gold-glow), transparent 70%);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(242, 199, 105, 0.1);
+      border: 1px solid rgba(242, 199, 105, 0.25);
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--gold);
+      margin-bottom: 1.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.01em;
+    }
+    .hero h1 .highlight {
+      background: linear-gradient(135deg, var(--gold), #E5BA5D);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-desc {
+      font-size: 1.125rem;
+      color: var(--text-secondary);
+      margin-bottom: 2rem;
+      max-width: 480px;
+      line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.875rem 1.75rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary:hover {
+      background: #0470F5;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px var(--primary-glow);
+    }
+    .btn-primary svg { width: 20px; height: 20px; }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: transparent;
+      color: var(--text-primary);
+      padding: 0.875rem 1.75rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.05);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    /* Hero badge showcase */
+    .hero-visual { display: flex; justify-content: center; position: relative; }
+    .badge-showcase {
+      position: relative;
+      width: 400px;
+      height: 400px;
+    }
+    .badge-showcase .badge-item {
+      position: absolute;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s;
+    }
+    .badge-showcase .badge-item img {
+      width: 100%;
+      height: 100%;
+      filter: drop-shadow(0 4px 20px rgba(0,0,0,0.4));
+    }
+    .badge-showcase .badge-item:hover {
+      z-index: 10;
+    }
+    .badge-showcase .badge-item:hover img {
+      transform: scale(1.12);
+      filter: drop-shadow(0 8px 30px var(--gold-glow));
+    }
+    .badge-showcase .badge-item img {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s;
+    }
+    .badge-center {
+      width: 160px; height: 160px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 5;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+    .badge-tl { width: 110px; height: 110px; top: 5%; left: 8%; z-index: 3; }
+    .badge-tr { width: 100px; height: 100px; top: 2%; right: 12%; z-index: 2; }
+    .badge-bl { width: 105px; height: 105px; bottom: 8%; left: 5%; z-index: 2; }
+    .badge-br { width: 95px; height: 95px; bottom: 5%; right: 8%; z-index: 2; }
+
+    @keyframes pulse-glow {
+      0%, 100% { filter: drop-shadow(0 0 20px rgba(242,199,105,0.2)); }
+      50% { filter: drop-shadow(0 0 40px rgba(242,199,105,0.5)); }
+    }
+
+    /* Unlock notification float */
+    .unlock-notif {
+      position: absolute;
+      background: var(--bg-card);
+      border: 1px solid rgba(3,92,213,0.25);
+      border-radius: 14px;
+      padding: 0.6rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      z-index: 20;
+      animation: float 4s ease-in-out infinite;
+    }
+    .unlock-notif.top { top: 15%; right: -20px; animation-delay: 0s; }
+    .unlock-notif.bottom { bottom: 20%; left: -20px; animation-delay: 2s; }
+    .unlock-notif-icon {
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .unlock-notif-icon.green { background: rgba(3,92,213,0.15); color: var(--primary-light); }
+    .unlock-notif-icon.gold { background: rgba(242,199,105,0.2); color: var(--gold); }
+    .unlock-notif-text { font-size: 0.75rem; font-weight: 600; white-space: nowrap; }
+    .unlock-notif-sub { font-size: 0.6rem; color: var(--text-muted); }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    /* ── Section common ── */
+    .section { padding: 6rem 1.5rem; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .section-label {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 3.5vw, 2.75rem);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+    .section-desc {
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto;
+      font-size: 1.05rem;
+    }
+
+    /* ── Skill Progression / Unlock Path ── */
+    .unlock-section { background: var(--bg-section); }
+    .unlock-path {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 0;
+      padding: 2rem 0;
+      overflow-x: auto;
+    }
+    .unlock-node {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+      position: relative;
+      cursor: pointer;
+    }
+    .unlock-badge-wrap {
+      width: 120px;
+      height: 120px;
+      position: relative;
+      transition: transform 0.3s;
+    }
+    .unlock-node:hover .unlock-badge-wrap { transform: scale(1.08); }
+    .unlock-badge-wrap img { width: 100%; height: 100%; }
+    .unlock-badge-wrap .badge-active { display: block; }
+    .unlock-badge-wrap .badge-locked { display: none; }
+    .unlock-node.locked .unlock-badge-wrap .badge-active { display: none; }
+    .unlock-node.locked .unlock-badge-wrap .badge-locked { display: block; }
+    .unlock-label {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    .unlock-goal {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .unlock-status {
+      font-size: 0.65rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 100px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .unlock-status.unlocked { background: rgba(242,199,105,0.15); color: var(--gold); }
+    .unlock-status.active { background: rgba(3,92,213,0.15); color: var(--primary-light); }
+    .unlock-status.locked-tag { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+    .unlock-connector {
+      width: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-top: 50px;
+      flex-shrink: 0;
+    }
+    .unlock-connector svg { color: var(--text-muted); }
+    .unlock-connector.done svg { color: var(--gold); }
+
+    /* ── Gamification Features ── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+      transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(242,199,105,0.25);
+      box-shadow: 0 12px 40px rgba(242,199,105,0.08);
+    }
+    .feature-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.25rem;
+    }
+    .feature-icon svg { width: 24px; height: 24px; }
+    .feature-icon.gold { background: rgba(242,199,105,0.15); color: var(--gold); }
+    .feature-icon.blue { background: rgba(3,92,213,0.15); color: var(--primary-light); }
+    .feature-icon.green { background: rgba(3,92,213,0.15); color: var(--primary-light); }
+    .feature-icon.purple { background: rgba(242,199,105,0.15); color: var(--gold); }
+    .feature-icon.orange { background: rgba(3,92,213,0.15); color: var(--primary-light); }
+    .feature-icon.cyan { background: rgba(242,199,105,0.15); color: var(--gold); }
+    .feature-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p { color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; }
+
+    /* ── How Unlock Works ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+    .step-card {
+      text-align: center;
+      padding: 2rem 1rem;
+      position: relative;
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+    }
+    .step-badge {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 1rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    .step-badge.s1 { background: rgba(3,92,213,0.15); color: var(--primary-light); }
+    .step-badge.s2 { background: rgba(242,199,105,0.15); color: var(--gold); }
+    .step-badge.s3 { background: rgba(3,92,213,0.15); color: var(--primary-light); }
+    .step-badge.s4 { background: rgba(242,199,105,0.15); color: var(--gold); }
+    .step-card h3 {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+    .step-card p { color: var(--text-secondary); font-size: 0.85rem; line-height: 1.5; }
+
+    /* ── Badge Gallery ── */
+    .gallery-section { background: var(--bg-section); }
+    .badge-gallery {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .gallery-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+    .gallery-item:hover { transform: translateY(-8px); }
+    .gallery-badge {
+      width: 120px;
+      height: 120px;
+      position: relative;
+    }
+    .gallery-badge img { width: 100%; height: 100%; }
+    .gallery-badge .locked-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .gallery-item:hover .locked-overlay { opacity: 1; }
+    .gallery-name {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-align: center;
+    }
+    .gallery-rank {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .gallery-rank.gold-rank { color: var(--gold); }
+
+    /* Toggle active/deactive */
+    .gallery-item .badge-state-active,
+    .gallery-item .badge-state-locked { transition: opacity 0.4s; }
+    .gallery-item.show-active .badge-state-locked { opacity: 0; position: absolute; }
+    .gallery-item.show-active .badge-state-active { opacity: 1; }
+    .gallery-item.show-locked .badge-state-active { opacity: 0; position: absolute; }
+    .gallery-item.show-locked .badge-state-locked { opacity: 1; }
+
+    /* ── Social Proof / Stats ── */
+    .stats-bar {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .stat-card {
+      text-align: center;
+      padding: 1.5rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+    }
+    .stat-number {
+      font-family: var(--font-heading);
+      font-size: 2.25rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--gold), #E5BA5D);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    /* ── CTA ── */
+    .cta-section {
+      text-align: center;
+      padding: 6rem 1.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(242,199,105,0.12), transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 2; }
+    .cta-badges {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .cta-badges img {
+      width: 64px; height: 64px;
+      opacity: 0.5;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .cta-badges img:nth-child(3) { opacity: 1; width: 80px; height: 80px; }
+    .cta-badges img:hover { opacity: 1; transform: scale(1.1); }
+    .cta-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    .cta-desc {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+      max-width: 480px;
+      margin: 0 auto 2rem;
+    }
+    .cta-buttons { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 1.5rem;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy { color: var(--text-muted); font-size: 0.85rem; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ── Mobile Menu ── */
+    .mobile-nav {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(10, 14, 23, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+    }
+    .mobile-nav.open { display: flex; }
+    .mobile-nav a {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .mobile-nav-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: none;
+      color: var(--text-primary);
+      padding: 0.5rem;
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 1024px) {
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); }
+      .badge-gallery { grid-template-columns: repeat(3, 1fr); }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .mobile-menu-btn { display: block; }
+      .hero-inner { grid-template-columns: 1fr; text-align: center; }
+      .hero-desc { margin-left: auto; margin-right: auto; }
+      .hero-actions { justify-content: center; }
+      .hero-visual { margin-top: 2rem; }
+      .badge-showcase { width: 300px; height: 300px; }
+      .badge-center { width: 120px; height: 120px; }
+      .badge-tl { width: 80px; height: 80px; }
+      .badge-tr { width: 75px; height: 75px; }
+      .badge-bl { width: 80px; height: 80px; }
+      .badge-br { width: 70px; height: 70px; }
+      .unlock-notif { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .unlock-path { flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+      .unlock-connector { width: 30px; padding-top: 0; }
+      .badge-gallery { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+      .gallery-badge { width: 90px; height: 90px; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+    @media (max-width: 480px) {
+      .badge-gallery { grid-template-columns: repeat(2, 1fr); }
+      .unlock-badge-wrap { width: 80px; height: 80px; }
+    }
+    /* ── Exercise Showcase ── */
+    .exercise-showcase-section { background: var(--bg-section); }
+    .exercise-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+    }
+    .exercise-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .exercise-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    }
+    .exercise-card.featured {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+    .exercise-card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s;
+    }
+    .exercise-card:hover .exercise-card-img {
+      transform: scale(1.05);
+    }
+    .exercise-card:not(.featured) {
+      aspect-ratio: 4/3;
+    }
+    .exercise-card:not(.featured) .exercise-card-img {
+      height: 100%;
+      object-fit: cover;
+    }
+    .exercise-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(10,14,23,0.95) 0%, rgba(10,14,23,0.4) 40%, transparent 70%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.25rem;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .exercise-card:hover .exercise-overlay,
+    .exercise-card.featured .exercise-overlay {
+      opacity: 1;
+    }
+    .exercise-card.featured .exercise-overlay {
+      padding: 1.75rem;
+    }
+    .exercise-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.6rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.5rem;
+      border-radius: 6px;
+      width: fit-content;
+      margin-bottom: 0.4rem;
+    }
+    .exercise-tag.foundation { background: rgba(3,92,213,0.15); color: var(--primary-light); }
+    .exercise-tag.intermediate { background: rgba(3,92,213,0.2); color: var(--primary-light); }
+    .exercise-tag.advanced { background: rgba(242,199,105,0.2); color: var(--gold); }
+    .exercise-name {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.15rem;
+    }
+    .exercise-card.featured .exercise-name {
+      font-size: 1.35rem;
+    }
+    .exercise-meta {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    .exercise-card.featured .exercise-meta {
+      font-size: 0.8rem;
+    }
+    .exercise-badge-mini {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      width: 36px;
+      height: 36px;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.5));
+      z-index: 5;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .exercise-card:hover .exercise-badge-mini,
+    .exercise-card.featured .exercise-badge-mini {
+      opacity: 1;
+      transform: scale(1);
+    }
+    .exercise-card.featured .exercise-badge-mini {
+      width: 48px;
+      height: 48px;
+      top: 1rem;
+      right: 1rem;
+    }
+
+    /* Exercise grid responsive */
+    @media (max-width: 1024px) {
+      .exercise-grid { grid-template-columns: repeat(2, 1fr); }
+      .exercise-card.featured { grid-column: span 2; grid-row: span 1; aspect-ratio: 16/9; }
+    }
+    @media (max-width: 768px) {
+      .exercise-grid { grid-template-columns: 1fr; gap: 1rem; }
+      .exercise-card.featured { grid-column: span 1; aspect-ratio: 16/9; }
+      .exercise-card:not(.featured) { aspect-ratio: 16/9; }
+      .exercise-overlay { opacity: 1; }
+      .exercise-badge-mini { opacity: 1; transform: scale(1); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+            <line x1="12" y1="22" x2="12" y2="15.5"/>
+            <line x1="22" y1="8.5" x2="12" y2="15.5"/>
+            <line x1="2" y1="8.5" x2="12" y2="15.5"/>
+          </svg>
+        </div>
+        Planche
+      </a>
+      <div class="nav-links">
+        <a href="#badges">Badges</a>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#collection">Collection</a>
+        <a href="#download" class="nav-cta">Download</a>
+      </div>
+      <button class="mobile-menu-btn" onclick="toggleMobileNav()" aria-label="Open menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Nav -->
+  <div class="mobile-nav" id="mobileNav">
+    <button class="mobile-nav-close" onclick="toggleMobileNav()" aria-label="Close menu">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+    <a href="#badges" onclick="toggleMobileNav()">Badges</a>
+    <a href="#features" onclick="toggleMobileNav()">Features</a>
+    <a href="#how-it-works" onclick="toggleMobileNav()">How It Works</a>
+    <a href="#collection" onclick="toggleMobileNav()">Collection</a>
+    <a href="#download" onclick="toggleMobileNav()">Download</a>
+  </div>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          Collect. Unlock. Level Up.
+        </div>
+        <h1>
+          Unlock Every <span class="highlight">Calisthenics Skill</span>
+        </h1>
+        <p class="hero-desc">
+          Earn badges, track your hold times, and progress through skill trees. Every exercise brings you closer to unlocking the next level. How far can you go?
+        </p>
+        <div class="hero-actions">
+          <a href="#download" class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+            Start Your Journey
+          </a>
+          <a href="#badges" class="btn-secondary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            View Badges
+          </a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <!-- Floating unlock notifications -->
+        <div class="unlock-notif top">
+          <div class="unlock-notif-icon green">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <div class="unlock-notif-text">Skill Unlocked!</div>
+            <div class="unlock-notif-sub">Tuck Planche earned</div>
+          </div>
+        </div>
+        <div class="unlock-notif bottom">
+          <div class="unlock-notif-icon gold">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div>
+            <div class="unlock-notif-text">New Badge!</div>
+            <div class="unlock-notif-sub">ADV Tuck Planche</div>
+          </div>
+        </div>
+
+        <!-- Badge showcase -->
+        <div class="badge-showcase">
+          <div class="badge-item badge-tl">
+            <img src="badges/frog-stand-active.svg" alt="Frog Stand badge - unlocked" loading="lazy">
+          </div>
+          <div class="badge-item badge-tr">
+            <img src="badges/tuck-planche-active.svg" alt="Tuck Planche badge - unlocked" loading="lazy">
+          </div>
+          <div class="badge-item badge-center">
+            <img src="badges/adv-tuck-active.svg" alt="ADV Tuck Planche badge - featured" loading="lazy">
+          </div>
+          <div class="badge-item badge-bl">
+            <img src="badges/straddle-deactive.svg" alt="Straddle Planche badge - locked" loading="lazy">
+          </div>
+          <div class="badge-item badge-br">
+            <img src="badges/full-planche-deactive.svg" alt="Full Planche badge - locked" loading="lazy">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="section" style="padding-top: 0; padding-bottom: 2rem;">
+    <div class="section-inner">
+      <div class="stats-bar">
+        <div class="stat-card">
+          <div class="stat-number">5+</div>
+          <div class="stat-label">Skill Groups</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">25+</div>
+          <div class="stat-label">Badges to Earn</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">30+</div>
+          <div class="stat-label">Exercises</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">100%</div>
+          <div class="stat-label">Free to Start</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Unlock Path -->
+  <section class="section unlock-section" id="badges">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Skill Tree</div>
+        <h2 class="section-title">Your Path to Mastery</h2>
+        <p class="section-desc">Every skill is a badge waiting to be unlocked. Complete the hold-time goal to light it up and advance to the next level.</p>
+      </div>
+      <div class="unlock-path">
+        <!-- Frog Stand -->
+        <div class="unlock-node">
+          <div class="unlock-badge-wrap">
+            <img class="badge-active" src="badges/frog-stand-active.svg" alt="Frog Stand - unlocked">
+          </div>
+          <div class="unlock-label">Frog Stand</div>
+          <div class="unlock-goal">Goal: 15s hold</div>
+          <div class="unlock-status unlocked">Unlocked</div>
+        </div>
+        <div class="unlock-connector done">
+          <svg width="40" height="20" viewBox="0 0 40 20" fill="none"><path d="M0 10h32m0 0l-6-6m6 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- Tuck -->
+        <div class="unlock-node">
+          <div class="unlock-badge-wrap">
+            <img class="badge-active" src="badges/tuck-planche-active.svg" alt="Tuck Planche - unlocked">
+          </div>
+          <div class="unlock-label">Tuck Planche</div>
+          <div class="unlock-goal">Goal: 10s hold</div>
+          <div class="unlock-status active">In Progress</div>
+        </div>
+        <div class="unlock-connector">
+          <svg width="40" height="20" viewBox="0 0 40 20" fill="none"><path d="M0 10h32m0 0l-6-6m6 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- ADV Tuck -->
+        <div class="unlock-node locked">
+          <div class="unlock-badge-wrap">
+            <img class="badge-active" src="badges/adv-tuck-active.svg" alt="ADV Tuck - active">
+            <img class="badge-locked" src="badges/adv-tuck-deactive.svg" alt="ADV Tuck Planche - locked">
+          </div>
+          <div class="unlock-label">ADV Tuck</div>
+          <div class="unlock-goal">Goal: 10s hold</div>
+          <div class="unlock-status locked-tag">Locked</div>
+        </div>
+        <div class="unlock-connector">
+          <svg width="40" height="20" viewBox="0 0 40 20" fill="none"><path d="M0 10h32m0 0l-6-6m6 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- Straddle -->
+        <div class="unlock-node locked">
+          <div class="unlock-badge-wrap">
+            <img class="badge-active" src="badges/straddle-active.svg" alt="Straddle - active">
+            <img class="badge-locked" src="badges/straddle-deactive.svg" alt="Straddle Planche - locked">
+          </div>
+          <div class="unlock-label">Straddle</div>
+          <div class="unlock-goal">Goal: 5s hold</div>
+          <div class="unlock-status locked-tag">Locked</div>
+        </div>
+        <div class="unlock-connector">
+          <svg width="40" height="20" viewBox="0 0 40 20" fill="none"><path d="M0 10h32m0 0l-6-6m6 6l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <!-- Full -->
+        <div class="unlock-node locked">
+          <div class="unlock-badge-wrap">
+            <img class="badge-active" src="badges/full-planche-active.svg" alt="Full Planche - active">
+            <img class="badge-locked" src="badges/full-planche-deactive.svg" alt="Full Planche - locked">
+          </div>
+          <div class="unlock-label">Full Planche</div>
+          <div class="unlock-goal">Goal: 3s hold</div>
+          <div class="unlock-status locked-tag">Locked</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section" id="features">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Gamified Training</div>
+        <h2 class="section-title">Every Rep Counts Toward Your Next Unlock</h2>
+        <p class="section-desc">Planche turns calisthenics into a progression game. Earn XP, collect badges, and watch your skill tree light up.</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <h3>Collect Skill Badges</h3>
+          <p>Each skill has a unique badge. Locked badges are greyed out. Hit the hold-time goal and watch it light up with full color.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3>Progressive Skill Trees</h3>
+          <p>Skills are organized in unlock paths. Master Frog Stand before tackling Tuck Planche. Each unlock opens new challenges.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <h3>Hold-Time Progress</h3>
+          <p>Your progress bar fills as you increase your hold time. Hit the target seconds and the skill is officially unlocked.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <h3>Multiple Skill Groups</h3>
+          <p>Planche, Handstand, Front Lever, Dragon Flag and more. Each group has its own badge collection and progression path.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <h3>Streak Calendar</h3>
+          <p>Build training streaks and keep your momentum going. Consistency is the key to unlocking harder skills.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 20V10"/><path d="M18 20V4"/><path d="M6 20v-4"/></svg>
+          </div>
+          <h3>Custom Difficulty</h3>
+          <p>Adjust reps, sets, and hold durations for each exercise. Scale the challenge to match your current level.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Exercise Showcase -->
+  <section class="section exercise-showcase-section" id="exercises">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Exercise Library</div>
+        <h2 class="section-title">Real Exercises. Real Progression.</h2>
+        <p class="section-desc">Every skill comes with targeted exercises that build the strength you need. Here's a glimpse of what you'll be training.</p>
+      </div>
+      <div class="exercise-grid">
+        <!-- Featured: Frog Stand -->
+        <div class="exercise-card featured">
+          <img class="exercise-card-img" src="exercises/frog-stand.jpg" alt="Frog Stand hold position" loading="lazy">
+          <img class="exercise-badge-mini" src="badges/frog-stand-active.svg" alt="Frog Stand badge">
+          <div class="exercise-overlay">
+            <div class="exercise-tag foundation">Foundation</div>
+            <div class="exercise-name">Frog Stand Hold</div>
+            <div class="exercise-meta">15s hold x 3 sets — Where your journey begins</div>
+          </div>
+        </div>
+        <!-- Tuck Planche -->
+        <div class="exercise-card">
+          <img class="exercise-card-img" src="exercises/tuck-planche.jpg" alt="Tuck Planche on ground" loading="lazy">
+          <img class="exercise-badge-mini" src="badges/tuck-planche-active.svg" alt="Tuck Planche badge">
+          <div class="exercise-overlay">
+            <div class="exercise-tag intermediate">Intermediate</div>
+            <div class="exercise-name">Tuck Planche</div>
+            <div class="exercise-meta">10s hold x 3 sets</div>
+          </div>
+        </div>
+        <!-- Planche Lean -->
+        <div class="exercise-card">
+          <img class="exercise-card-img" src="exercises/planche-lean.jpg" alt="Planche Lean position" loading="lazy">
+          <img class="exercise-badge-mini" src="badges/frog-stand-active.svg" alt="Foundation badge">
+          <div class="exercise-overlay">
+            <div class="exercise-tag foundation">Foundation</div>
+            <div class="exercise-name">Planche Lean</div>
+            <div class="exercise-meta">20s hold x 3 sets</div>
+          </div>
+        </div>
+        <!-- ADV Tuck -->
+        <div class="exercise-card">
+          <img class="exercise-card-img" src="exercises/adv-tuck.jpeg" alt="ADV Tuck Planche hold" loading="lazy">
+          <img class="exercise-badge-mini" src="badges/adv-tuck-active.svg" alt="ADV Tuck badge">
+          <div class="exercise-overlay">
+            <div class="exercise-tag advanced">Advanced</div>
+            <div class="exercise-name">ADV Tuck Hold</div>
+            <div class="exercise-meta">10s hold x 3 sets</div>
+          </div>
+        </div>
+        <!-- Pseudo Pushup -->
+        <div class="exercise-card">
+          <img class="exercise-card-img" src="exercises/pseudo-pushup.jpg" alt="Pseudo Planche Push-up" loading="lazy">
+          <img class="exercise-badge-mini" src="badges/tuck-planche-active.svg" alt="Tuck badge">
+          <div class="exercise-overlay">
+            <div class="exercise-tag intermediate">Intermediate</div>
+            <div class="exercise-name">Pseudo Planche Push-up</div>
+            <div class="exercise-meta">10 rep x 3 sets</div>
+          </div>
+        </div>
+        <!-- Straddle -->
+        <div class="exercise-card">
+          <img class="exercise-card-img" src="exercises/straddle.jpeg" alt="Straddle Planche hold" loading="lazy">
+          <img class="exercise-badge-mini" src="badges/straddle-active.svg" alt="Straddle badge">
+          <div class="exercise-overlay">
+            <div class="exercise-tag advanced">Elite</div>
+            <div class="exercise-name">Straddle Planche</div>
+            <div class="exercise-meta">5s hold x 3 sets</div>
+          </div>
+        </div>
+        <!-- Frog Lean -->
+        <div class="exercise-card">
+          <img class="exercise-card-img" src="exercises/frog-lean.jpg" alt="Frog Lean position" loading="lazy">
+          <img class="exercise-badge-mini" src="badges/frog-stand-active.svg" alt="Foundation badge">
+          <div class="exercise-overlay">
+            <div class="exercise-tag foundation">Foundation</div>
+            <div class="exercise-name">Frog Lean</div>
+            <div class="exercise-meta">15s hold x 3 sets</div>
+          </div>
+        </div>
+        <!-- Tuck Parallettes -->
+        <div class="exercise-card">
+          <img class="exercise-card-img" src="exercises/tuck-parallettes.jpg" alt="Tuck Planche on Parallettes" loading="lazy">
+          <img class="exercise-badge-mini" src="badges/tuck-planche-active.svg" alt="Tuck badge">
+          <div class="exercise-overlay">
+            <div class="exercise-tag intermediate">Intermediate</div>
+            <div class="exercise-name">Tuck on Parallettes</div>
+            <div class="exercise-meta">10s hold x 3 sets</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section" id="how-it-works" style="background: var(--bg-section);">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">How to Unlock</div>
+        <h2 class="section-title">4 Steps to Your First Badge</h2>
+      </div>
+      <div class="steps-grid">
+        <div class="step-card">
+          <div class="step-badge s1">1</div>
+          <h3>Pick a Skill</h3>
+          <p>Browse the skill tree and choose your target. Start with the foundation or jump ahead.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-badge s2">2</div>
+          <h3>Train Daily</h3>
+          <p>Follow the guided workout. Each session is timed with rest intervals and set tracking.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-badge s3">3</div>
+          <h3>Hit the Goal</h3>
+          <p>Reach the target hold time and watch your badge transform from grey to full color.</p>
+        </div>
+        <div class="step-card">
+          <div class="step-badge s4">4</div>
+          <h3>Unlock Next</h3>
+          <p>Each unlocked skill reveals the next challenge. Keep progressing through the entire tree.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Badge Gallery -->
+  <section class="section gallery-section" id="collection">
+    <div class="section-inner">
+      <div class="section-header">
+        <div class="section-label">Badge Collection</div>
+        <h2 class="section-title">Can You Collect Them All?</h2>
+        <p class="section-desc">Hover to preview the unlocked version. Download the app and start earning your collection.</p>
+      </div>
+      <div class="badge-gallery">
+        <div class="gallery-item" onmouseenter="this.classList.add('show-active');this.classList.remove('show-locked')" onmouseleave="this.classList.add('show-locked');this.classList.remove('show-active')">
+          <div class="gallery-badge">
+            <img class="badge-state-active" src="badges/frog-stand-active.svg" alt="Frog Stand active" style="position:absolute;">
+            <img class="badge-state-locked" src="badges/frog-stand-deactive.svg" alt="Frog Stand locked">
+          </div>
+          <div class="gallery-name">Frog Stand</div>
+          <div class="gallery-rank">Foundation</div>
+        </div>
+        <div class="gallery-item" onmouseenter="this.classList.add('show-active');this.classList.remove('show-locked')" onmouseleave="this.classList.add('show-locked');this.classList.remove('show-active')">
+          <div class="gallery-badge">
+            <img class="badge-state-active" src="badges/tuck-planche-active.svg" alt="Tuck Planche active" style="position:absolute;">
+            <img class="badge-state-locked" src="badges/tuck-planche-deactive.svg" alt="Tuck Planche locked">
+          </div>
+          <div class="gallery-name">Tuck Planche</div>
+          <div class="gallery-rank">Intermediate</div>
+        </div>
+        <div class="gallery-item" onmouseenter="this.classList.add('show-active');this.classList.remove('show-locked')" onmouseleave="this.classList.add('show-locked');this.classList.remove('show-active')">
+          <div class="gallery-badge">
+            <img class="badge-state-active" src="badges/adv-tuck-active.svg" alt="ADV Tuck active" style="position:absolute;">
+            <img class="badge-state-locked" src="badges/adv-tuck-deactive.svg" alt="ADV Tuck locked">
+          </div>
+          <div class="gallery-name">ADV Tuck</div>
+          <div class="gallery-rank gold-rank">Advanced</div>
+        </div>
+        <div class="gallery-item" onmouseenter="this.classList.add('show-active');this.classList.remove('show-locked')" onmouseleave="this.classList.add('show-locked');this.classList.remove('show-active')">
+          <div class="gallery-badge">
+            <img class="badge-state-active" src="badges/straddle-active.svg" alt="Straddle active" style="position:absolute;">
+            <img class="badge-state-locked" src="badges/straddle-deactive.svg" alt="Straddle locked">
+          </div>
+          <div class="gallery-name">Straddle</div>
+          <div class="gallery-rank gold-rank">Elite</div>
+        </div>
+        <div class="gallery-item" onmouseenter="this.classList.add('show-active');this.classList.remove('show-locked')" onmouseleave="this.classList.add('show-locked');this.classList.remove('show-active')">
+          <div class="gallery-badge">
+            <img class="badge-state-active" src="badges/full-planche-active.svg" alt="Full Planche active" style="position:absolute;">
+            <img class="badge-state-locked" src="badges/full-planche-deactive.svg" alt="Full Planche locked">
+          </div>
+          <div class="gallery-name">Full Planche</div>
+          <div class="gallery-rank gold-rank">Legendary</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section" id="download">
+    <div class="cta-inner">
+      <div class="cta-badges">
+        <img src="badges/frog-stand-deactive.svg" alt="Badge">
+        <img src="badges/tuck-planche-deactive.svg" alt="Badge">
+        <img src="badges/adv-tuck-active.svg" alt="Badge">
+        <img src="badges/straddle-deactive.svg" alt="Badge">
+        <img src="badges/full-planche-deactive.svg" alt="Badge">
+      </div>
+      <h2 class="cta-title">Ready to Earn Your First Badge?</h2>
+      <p class="cta-desc">Start with Frog Stand and work your way up. Every skill you unlock is proof of your dedication.</p>
+      <div class="cta-buttons">
+        <a href="#" class="btn-primary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Download on App Store
+        </a>
+        <a href="#" class="btn-secondary">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+          Watch Demo
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-copy">&copy; 2026 Planche Fitness. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="report-bug.html">Report Bug</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Navbar scroll effect
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
+    });
+
+    // Mobile nav toggle
+    function toggleMobileNav() {
+      document.getElementById('mobileNav').classList.toggle('open');
+    }
+
+    // Initialize gallery items as locked
+    document.querySelectorAll('.gallery-item').forEach(el => {
+      el.classList.add('show-locked');
+    });
+
+    // Scroll reveal animations
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .step-card, .unlock-node, .gallery-item, .stat-card, .exercise-card').forEach(el => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateY(20px)';
+      el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+      observer.observe(el);
+    });
+
+    // Stagger animation for unlock path
+    document.querySelectorAll('.unlock-node').forEach((el, i) => {
+      el.style.transitionDelay = `${i * 0.15}s`;
+    });
+    document.querySelectorAll('.gallery-item').forEach((el, i) => {
+      el.style.transitionDelay = `${i * 0.1}s`;
+    });
+    document.querySelectorAll('.exercise-card').forEach((el, i) => {
+      el.style.transitionDelay = `${i * 0.08}s`;
+    });
+  </script>
+</body>
+</html>

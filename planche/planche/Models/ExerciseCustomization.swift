@@ -13,14 +13,13 @@ final class ExerciseCustomization {
     init(
         exerciseName: String,
         skillID: String,
-        difficulty: Difficulty? = nil,
         customReps: Int? = nil,
         customDurationSeconds: Int? = nil
     ) {
         self.id = UUID()
         self.exerciseName = exerciseName
         self.skillID = skillID
-        self.difficultyRawValue = difficulty?.rawValue
+        self.difficultyRawValue = nil
         self.customReps = customReps
         self.customDurationSeconds = customDurationSeconds
     }

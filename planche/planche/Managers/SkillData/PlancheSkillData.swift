@@ -9,31 +9,10 @@ extension SkillCatalog {
         displayName: "Planche",
         iconName: "figure.strengthtraining.traditional",
         description: "Master the planche — from foundational strength to the full hold.",
-        skillIDs: ["foundation", "foundation2", "tuckPlanche", "advTuckPlanche", "straddlePlanche", "fullPlanche"]
+        skillIDs: ["foundation2", "tuckPlanche", "advTuckPlanche", "straddlePlanche", "fullPlanche"]
     )
 
     static let plancheSkills: [Skill] = [
-        Skill(
-            id: "foundation",
-            groupID: "planche",
-            displayName: "Base",
-            categoryLabel: "STARTER",
-
-            iconName: "figure.walk",
-            description: "Xây dựng sức mạnh nền tảng, chuẩn bị cho mọi skill sau này",
-            estimatedTime: "~23 min",
-            equipment: "Body weight",
-            difficultyStars: 1.0,
-            order: 0,
-            progressGoalSeconds: 45,
-            progressRequirements: ["Body straight from head to heels", "Core braced, hips level", "Arms fully locked"],
-            skillPrerequisites: [],
-            requirement: nil,
-            requiresSubscription: false,
-            recommendedPreviousSkillID: nil,
-            activeIconImageName: nil,
-            deactiveIconImageName: nil
-        ),
         Skill(
             id: "foundation2",
             groupID: "planche",
@@ -45,7 +24,7 @@ extension SkillCatalog {
             estimatedTime: "~23 min",
             equipment: "Parallettes",
             difficultyStars: 2.0,
-            order: 1,
+            order: 0,
             progressGoalSeconds: 15,
             progressRequirements: ["Straight arms locked", "Core engaged and tight", "Stable - no falling"],
             skillPrerequisites: ["1 minute plank", "30 push-ups"],
@@ -66,7 +45,7 @@ extension SkillCatalog {
             estimatedTime: "~30 min",
             equipment: "Body weight",
             difficultyStars: 2.0,
-            order: 2,
+            order: 1,
             progressGoalSeconds: 10,
             progressRequirements: ["Hips level with shoulders", "Shoulders protracted", "Arms fully locked"],
             skillPrerequisites: ["15s planche lean hold", "50 push-ups"],
@@ -86,7 +65,7 @@ extension SkillCatalog {
             estimatedTime: "~35 min",
             equipment: "Parallettes, Band",
             difficultyStars: 2.5,
-            order: 3,
+            order: 2,
             progressGoalSeconds: 10,
             progressRequirements: ["Back parallel to floor", "Hips pushed back", "Shoulders protracted"],
             skillPrerequisites: ["Hold Tuck Planche 15s"],
@@ -107,7 +86,7 @@ extension SkillCatalog {
             estimatedTime: "~40 min",
             equipment: "Parallettes",
             difficultyStars: 4.0,
-            order: 4,
+            order: 3,
             progressGoalSeconds: 5,
             progressRequirements: ["Body parallel to ground", "Legs straddled wide", "Arms locked straight"],
             skillPrerequisites: ["Hold ADV Tuck Planche 10s"],
@@ -128,7 +107,7 @@ extension SkillCatalog {
             estimatedTime: "~45 min",
             equipment: "Parallettes",
             difficultyStars: 5.0,
-            order: 5,
+            order: 4,
             progressGoalSeconds: 3,
             progressRequirements: ["Full body parallel", "Legs together, toes pointed", "Arms locked, shoulders protracted"],
             skillPrerequisites: ["Hold Straddle Planche 8s"],
@@ -150,53 +129,6 @@ extension SkillCatalog {
 
     private static let videoNames: [String: String] = [
         "Pike Push-ups": "pike-pushup",
-    ]
-
-    // MARK: - Foundation Templates
-
-    private static let foundationTemplates: [(name: String, imageName: String, type: ExerciseType, durationSeconds: Int, reps: String, repsByDifficulty: [Difficulty: String], description: String, guide: String, summary: String)] = [
-        (
-            "Scapular Push-up", "sprite-scapular-push-up", .repBased, 0, "10 rep",
-            [.starter: "10 rep", .standard: "10 rep", .solid: "10 rep"],
-            "Keep your elbows fully locked throughout — this isolates the scapular movement. Focus on full protraction at the top and full retraction at the bottom. Avoid shrugging your shoulders or letting your hips sag.",
-            "Track reps with full retraction and protraction; increase difficulty by slowing each phase to 3 seconds or performing on parallettes. Loop a resistance band across your chest anchored above to assist protraction, or elevate your feet to add difficulty.",
-            "Isolates scapular retraction and protraction to build the pushing foundation for planche. Targets the serratus anterior and mid-traps — muscles critical for shoulder protraction. Essential for developing the scapular strength needed to support bodyweight in planche positions."
-        ),
-        (
-            "Plank Hold", "plank-hold", .timed, 30, "30s",
-            [.starter: "20s", .standard: "30s", .solid: "45s"],
-            "Keep your body in a rigid straight line — no hip sag, no raised butt. Brace your core by drawing your navel toward your spine and squeeze your glutes. Avoid letting your lower back arch or your shoulders creep toward your ears.",
-            "Track hold time each session and aim to add 5 seconds per week; increase difficulty by elevating your feet or adding a weight plate on your back. Drop to a knee plank if the full hold is too hard; use a band across your upper back anchored under your hands to challenge shoulder stability.",
-            "Builds whole-body tension and straight-line body awareness — the foundation of every planche position. Targets the core, glutes, and shoulders simultaneously. Develops the isometric strength and body alignment needed to hold a rigid horizontal line under load."
-        ),
-        (
-            "Push-ups", "sprite-push-up", .repBased, 0, "10 rep",
-            [.starter: "8 rep", .standard: "10 rep", .solid: "14 rep"],
-            "Keep your elbows at roughly 45 degrees — not flared wide. Maintain a rigid body line from head to heels and breathe steadily throughout. Avoid sagging hips or letting your head drop forward.",
-            "Track total clean reps per session; increase difficulty by elevating your feet, wearing a weight vest, or using a slow 3-second descent. Loop a resistance band across your chest anchored under your hands to reduce load, or stretch one across your upper back to add resistance.",
-            "A foundational pressing movement targeting the chest, triceps, and anterior deltoids. Builds horizontal push strength and body tension required for planche progressions. Consistent training develops the pressing power needed to perform planche push-ups."
-        ),
-        (
-            "Pseudo Planche Push-ups", "sprite-pseudo-planche-pushup", .repBased, 0, "8 rep",
-            [.starter: "5 rep", .standard: "8 rep", .solid: "12 rep"],
-            "Keep your shoulders ahead of your wrists at all times — this is the key technique point. Tuck your elbows tight to your sides throughout the movement. Avoid letting your hips rise or your shoulders drift back behind your wrists.",
-            "Track clean reps where your shoulders stay ahead of your wrists; increase difficulty by moving hands lower toward your hips or using a 3-second descent. Loop a resistance band around your waist anchored above to reduce load, or perform on parallettes for greater depth.",
-            "Simulates the planche forward lean while building pressing strength. Targets the anterior deltoids, triceps, and serratus anterior under a forward-shifted bodyweight load. A key bridge between standard push-ups and true planche pressing."
-        ),
-        (
-            "Hollow Rock", "hollow-rock", .timed, 5, "5s",
-            [.starter: "15s", .standard: "20s", .solid: "30s"],
-            "Press your lower back firmly into the floor — there must be no gap at any point. Keep your arms by your ears and legs straight, and breathe steadily. Avoid rocking with momentum; the movement must come entirely from your abs.",
-            "Track total rock time per session; increase difficulty by extending arms and legs further out or holding a weight plate overhead. Use bent knees as an easier variation, or place a resistance band around your thighs to increase core demand.",
-            "Trains the hollow body position — the core shape required in every planche hold. Targets the rectus abdominis and hip flexors through constant isometric tension. Develops the body compression needed to keep legs elevated without hip sag."
-        ),
-        (
-            "Planche Lean", "planche-lean", .timed, 10, "10s",
-            [.starter: "10s", .standard: "10s", .solid: "10s"],
-            "Keep your arms fully locked straight — bending the elbows reduces the training effect. Maintain a rigid body line and breathe steadily throughout the hold. Avoid letting your hips pike up or your shoulders round inward.",
-            "Track how far your shoulders pass your wrists each session; increase difficulty by leaning further forward or holding longer. Loop a resistance band around your waist anchored above to lighten the load, or elevate your feet to increase difficulty.",
-            "Conditions the wrists, shoulders, and core for the forward lean required in planche. Targets the anterior deltoids and serratus anterior under bodyweight load. Progressively overloads the shoulder girdle with the exact lean angle of the planche skill."
-        ),
     ]
 
     // MARK: - Frog Stand Stages
@@ -231,7 +163,7 @@ extension SkillCatalog {
         Self.tuckPlancheSupportStage(
             reps: "15s",
             durationSeconds: 15,
-            nextStageCondition: "Move to Stage 3 when you can hold 15s × 3 sets."
+            nextStageCondition: "Move to Stage 3 when you can hold for 15s."
         ),
         Self.tuckPlancheGroundStage(
             reps: "15s",
@@ -246,7 +178,7 @@ extension SkillCatalog {
         Self.advTuckSupportStage(
             reps: "10s",
             durationSeconds: 10,
-            nextStageCondition: "Move to Stage 2 when you can hold 10+s × 3 sets."
+            nextStageCondition: "Move to Stage 2 when you can hold for 10s."
         ),
         Self.advTuckGroundStage(
             reps: "10s",
@@ -274,7 +206,7 @@ extension SkillCatalog {
         Self.straddleSupportStage(
             reps: "5s",
             durationSeconds: 5,
-            nextStageCondition: "Move to Stage 2 when you can hold 5+s × 3 sets."
+            nextStageCondition: "Move to Stage 2 when you can hold for 10s."
         ),
         Self.straddleGroundStage(
             reps: "5s",
@@ -294,7 +226,7 @@ extension SkillCatalog {
         Self.fullPlancheSupportStage(
             reps: "5s",
             durationSeconds: 5,
-            nextStageCondition: "Move to Stage 3 when you can hold 5+s × 3 sets."
+            nextStageCondition: "Move to Stage 3 when you can hold for 10s."
         ),
         Self.fullPlancheGroundStage(
             reps: "5s",
@@ -308,24 +240,6 @@ extension SkillCatalog {
     static let plancheExercises: [String: [Exercise]] = {
         var map: [String: [Exercise]] = [:]
 
-        // Foundation
-        map["foundation"] = foundationTemplates.map { t in
-            Exercise(
-                name: t.name,
-                skillID: "foundation",
-                description: t.description,
-                imageName: t.imageName,
-                spriteConfig: spriteConfigs[t.name],
-                videoName: videoNames[t.name],
-                reps: t.reps,
-                repsByDifficulty: t.repsByDifficulty,
-                durationSeconds: t.durationSeconds,
-                exerciseType: t.type,
-                guide: t.guide,
-                summary: t.summary
-            )
-        }
-
         // Frog Stand
         map["foundation2"] = [
             Exercise(
@@ -335,15 +249,14 @@ extension SkillCatalog {
                 imageName: "sprite-scapular-push-up",
                 spriteConfig: SpriteConfig(imageName: "sprite-scapular-push-up", frameCount: 9, columns: 3, fps: 2),
                 reps: "10 rep",
-                repsByDifficulty: [.starter: "10 rep", .standard: "10 rep", .solid: "10 rep"],
                 exerciseType: .repBased,
                 guide: "Slow each rep down to 3 seconds up, 3 seconds down to really feel it working. If it's too easy, elevate your feet to add more load.",
                 sets: 3,
                 summary: "A push-up where only your shoulder blades move — your arms stay locked straight. Works the muscles around your shoulder blades and upper back. Great for learning how to control your shoulders independently."
             ),
             Self.plancheLean(skillID: "foundation2", reps: "15s", durationSeconds: 15),
-            Self.pseudoPlanchePushups(skillID: "foundation2", reps: "5 rep", repsByDifficulty: [.starter: "5 rep", .standard: "8 rep", .solid: "10 rep"]),
-            Self.pikePushups(skillID: "foundation2", reps: "8 rep", repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"]),
+            Self.pseudoPlanchePushups(skillID: "foundation2", reps: "5 rep"),
+            Self.pikePushups(skillID: "foundation2", reps: "8 rep"),
             Self.hollowRock(skillID: "foundation2"),
             Exercise(
                 name: "Frog Stand",
@@ -358,8 +271,8 @@ extension SkillCatalog {
         // Tuck Planche
         map["tuckPlanche"] = [
             Self.plancheLean(skillID: "tuckPlanche", reps: "15s", durationSeconds: 15),
-            Self.pikePushups(skillID: "tuckPlanche", reps: "10 rep", repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"]),
-            Self.pseudoPlanchePushups(skillID: "tuckPlanche", reps: "10 rep", repsByDifficulty: [.starter: "8 rep", .standard: "10 rep", .solid: "12 rep"]),
+            Self.pikePushups(skillID: "tuckPlanche", reps: "10 rep"),
+            Self.pseudoPlanchePushups(skillID: "tuckPlanche", reps: "10 rep"),
             Self.lSitHold(skillID: "tuckPlanche"),
             Self.tuckSitSwing(skillID: "tuckPlanche", reps: "8 rep"),
             Exercise(
@@ -427,12 +340,11 @@ extension SkillCatalog {
                 description: "Keep your arms fully locked and shoulders protracted throughout the lean. Maintain a flat back — avoid letting your hips pike upward. Breathe steadily and don't hold your breath during the hold.",
                 imageName: "straddle-lean",
                 reps: "15s",
-                repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
                 durationSeconds: 15,
                 exerciseType: .timed,
-                guide: "Track how far your shoulders extend past your wrists each session; increase difficulty by leaning further or working toward lifting your feet off the floor. Loop a resistance band around your waist anchored above to reduce load at extreme lean angles.",
+                guide: "Track how far your shoulders extend past your wrists each session; increase difficulty by leaning further or working toward lifting your feet off the floor.",
                 sets: 3,
-                summary: "A straddle-specific forward lean targeting the shoulders and serratus anterior under wide-leg load. Develops the protraction strength and lean depth required to progress into the straddle planche. Wider legs reduce load compared to a full planche lean."
+                summary: "This exercise involves leaning forward, focusing on the shoulders and serratus anterior muscles before spreading the legs apart. Become familiar with the straddle planche position."
             ),
             Self.handstandPushupWall(skillID: "straddlePlanche", reps: "10 rep"),
             Self.tuckPushupToStraddlePlanchePushup(skillID: "straddlePlanche"),
@@ -445,9 +357,9 @@ extension SkillCatalog {
                 spriteConfig: SpriteConfig(imageName: "sprite-adv-tuck-to-straddle", frameCount: 9, columns: 3, fps: 2),
                 reps: "5 rep",
                 exerciseType: .repBased,
-                guide: "Track reps where both the ADV tuck and straddle positions are clearly held; increase difficulty by pausing 2 seconds in the straddle or extending both legs simultaneously. Loop a resistance band around your waist anchored above when you can't maintain elevation through the transition.",
+                guide: "Track reps where both the ADV tuck and straddle positions are clearly held; increase difficulty by pausing 2 seconds in the straddle or extending both legs simultaneously.",
                 sets: 3,
-                summary: "A dynamic transition from advanced tuck to straddle planche. Targets the shoulder girdle and core through controlled leg extension under load. Develops the proprioception and strength needed to bridge the gap to the full planche."
+                summary: "A dynamic transition from advanced tuck to straddle planche. Targets the shoulder girdle and core through controlled leg extension under load. Develops the proprioception and strength needed to bridge the gap to the straddle planche."
             ),
             Exercise(
                 name: "Straddle Planche",
@@ -466,12 +378,12 @@ extension SkillCatalog {
             Exercise(
                 name: "Planche Lean Raise",
                 skillID: "fullPlanche",
-                description: "Keep your arms fully locked — any elbow bend reduces the training stimulus. Protract your shoulders maximally before initiating the raise. Avoid letting your hips pike upward; the body should rise as one rigid unit.",
+                description: "Keep your arms fully locked .Protract your shoulders maximally before initiating the raise. Avoid letting your hips pike upward; the body should rise as one rigid unit.",
                 imageName: "sprite-planche-lean-raise",
                 spriteConfig: SpriteConfig(imageName: "sprite-planche-lean-raise", frameCount: 12, columns: 3, fps: 2),
                 reps: "5 rep",
                 exerciseType: .repBased,
-                guide: "Track reps where your feet clearly leave the ground with arms locked; increase difficulty by holding the raised position for 2–3 seconds. Loop a resistance band around your waist anchored above to practice the lift-off before you have full strength.",
+                guide: "Track reps where your feet clearly leave the ground with arms locked; increase difficulty by holding the raised position for 2–3 seconds.",
                 sets: 3,
                 summary: "A dynamic lean where the feet lift at maximum forward shoulder position. Targets the anterior deltoids and serratus anterior under peak bodyweight load. Develops the transition strength needed to press into a full planche hold."
             ),
@@ -482,7 +394,6 @@ extension SkillCatalog {
                 description: "Extend one leg straight back and keep the other tucked beneath you — lock your arms and protract your shoulders hard. Focus on keeping your hips level — the extended leg wants to pull you sideways, so fight it with your core. Switch legs each set to build balanced strength.",
                 imageName: "full-planche-1-leg",
                 reps: "5s",
-                repsByDifficulty: [.starter: "5s", .standard: "5s", .solid: "5s"],
                 durationSeconds: 5,
                 exerciseType: .timed,
                 guide: "Start with your stronger leg extended first to build confidence, then switch. If your hips twist, the extended leg is too high — bring it down to hip level and hold there. This is the last step before the full planche — you're almost there.",
@@ -511,7 +422,6 @@ extension SkillCatalog {
             description: "Keep your arms completely straight — bent elbows take the work away from your shoulders. Lean forward until your shoulders pass your wrists, and hold. Don't let your hips pike up or your back round.",
             imageName: "planche-lean",
             reps: reps,
-            repsByDifficulty: [.starter: reps, .standard: reps, .solid: reps],
             durationSeconds: durationSeconds,
             exerciseType: .timed,
             guide: "Mark where your shoulders reach past your wrists and try to beat it next session. Start with a small lean and add distance as your wrists get stronger.",
@@ -520,7 +430,7 @@ extension SkillCatalog {
         )
     }
 
-    private static func pikePushups(skillID: String, reps: String, repsByDifficulty: [Difficulty: String]) -> Exercise {
+    private static func pikePushups(skillID: String, reps: String) -> Exercise {
         Exercise(
             name: "Pike Push-ups",
             skillID: skillID,
@@ -528,7 +438,6 @@ extension SkillCatalog {
             imageName: "sprite-pike-pushup",
             spriteConfig: SpriteConfig(imageName: "sprite-pike-pushup", frameCount: 9, columns: 3, fps: 2),
             reps: reps,
-            repsByDifficulty: repsByDifficulty,
             exerciseType: .repBased,
             guide: "Put your feet on a box or step to make it harder — more height means more shoulder load. If you can't reach the floor yet, use a smaller range and build up over time.",
             sets: 3,
@@ -543,7 +452,6 @@ extension SkillCatalog {
             description: "Press your lower back flat into the floor — no gap, ever. Keep your arms by your ears and legs straight while you rock. Don't use momentum — your abs should do all the work.",
             imageName: "hollow-rock",
             reps: "15s",
-            repsByDifficulty: [.starter: "15s", .standard: "15s", .solid: "15s"],
             durationSeconds: 15,
             exerciseType: .timed,
             guide: "Bend your knees if you can't keep your lower back flat — that's the easier version. Add time each week; when 30 seconds feels easy, hold a weight plate overhead.",
@@ -552,7 +460,7 @@ extension SkillCatalog {
         )
     }
 
-    private static func pseudoPlanchePushups(skillID: String, reps: String, repsByDifficulty: [Difficulty: String]) -> Exercise {
+    private static func pseudoPlanchePushups(skillID: String, reps: String) -> Exercise {
         Exercise(
             name: "Pseudo Planche Push-ups",
             skillID: skillID,
@@ -560,7 +468,6 @@ extension SkillCatalog {
             imageName: "sprite-pseudo-planche-pushup",
             spriteConfig: SpriteConfig(imageName: "sprite-pseudo-planche-pushup", frameCount: 9, columns: 3, fps: 2),
             reps: reps,
-            repsByDifficulty: repsByDifficulty,
             exerciseType: .repBased,
             guide: "Move your hands closer to your hips to make it harder, or closer to your shoulders to make it easier. Try a 3-second descent to build more strength in the bottom position.",
             sets: 3,
@@ -575,7 +482,6 @@ extension SkillCatalog {
             description: "Stack your wrists, shoulders, and hips in one vertical line and press actively through your fingertips. Squeeze your glutes, engage your core, and breathe steadily throughout. Avoid arching your lower back or letting your legs drift apart.",
             imageName: "handstand-hold-wall",
             reps: reps,
-            repsByDifficulty: [.starter: reps, .standard: reps, .solid: reps],
             durationSeconds: durationSeconds,
             exerciseType: .timed,
             guide: "Track your longest unbroken hold and add 2–3 seconds per week; increase difficulty by reducing wall contact to fingertips only, building toward freestanding. Loop a resistance band around your hips overhead to assist freestanding balance practice.",
@@ -593,7 +499,7 @@ extension SkillCatalog {
             spriteConfig: SpriteConfig(imageName: "sprite-handstand-pushup-wall", frameCount: 9, columns: 3, fps: 2),
             reps: reps,
             exerciseType: .repBased,
-            guide: "Track clean reps with full range of motion — head nearly touching the floor; increase difficulty by using a deficit on parallettes or slowing the descent. Loop a resistance band around your waist anchored above to reduce bodyweight when you can't complete full reps.",
+            guide: "Track clean reps with full range of motion — head nearly touching the floor; increase difficulty by using a deficit on parallettes or slowing the descent.",
             sets: 3,
             summary: "A vertical pressing movement in an inverted position targeting the deltoids, triceps, and upper traps. Builds the overhead strength required for freestanding handstand push-ups. Develops pressing power, body tension, and scapular stability for advanced overhead skills."
         )
@@ -606,10 +512,9 @@ extension SkillCatalog {
             description: "Press actively through both handles — passive resting won't build the strength needed. Keep your legs fully extended with toes pointed and thighs clear of the handles. Avoid letting your shoulders rise toward your ears.",
             imageName: "l-sit-hold",
             reps: reps,
-            repsByDifficulty: [.starter: reps, .standard: reps, .solid: reps],
             durationSeconds: durationSeconds,
             exerciseType: .timed,
-            guide: "Track your longest unbroken hold and add 2–3 seconds per week; build up from a tucked L-Sit before extending fully. Loop a resistance band around a pull-up bar and pass it under your thighs to support your hips, or add ankle weights to increase difficulty.",
+            guide: "Track your longest unbroken hold and add 2–3 seconds per week; build up from a tucked L-Sit before extending fully. Add ankle weights to increase difficulty.",
             sets: 3,
             summary: "An isometric compression hold targeting the triceps, hip flexors, and core. Builds the pushing and compression strength needed to support bodyweight on parallettes. Develops the pressing endurance and body tension that carry directly into planche work."
         )
@@ -720,7 +625,7 @@ extension SkillCatalog {
         ExerciseStage(
             name: "Tuck Raise Toes Assisted",
             description: "Press actively through your hands and protract your shoulders — don't just balance on your toes. Keep your knees tight to your chest and breathe steadily. Avoid leaning too far forward; your hips should stay level with your shoulders.",
-            guide: "Track how lightly your toes touch the floor — the lighter, the better; try to hold completely off the floor for 1–2 seconds per set. Loop a resistance band around your waist anchored above to help maintain elevation as you reduce toe contact.",
+            guide: "Track how lightly your toes touch the floor — the lighter, the better; try to hold completely off the floor for 1–2 seconds per set.",
             reps: reps,
             exerciseType: .repBased,
             spriteConfig: SpriteConfig(imageName: "sprite-tuck-toes-assisted", frameCount: 9, columns: 3, fps: 2),
@@ -756,7 +661,7 @@ extension SkillCatalog {
             name: "Tuck Planche",
             description: "Push the floor away aggressively and keep your shoulders protracted — passive hanging doesn't build the required strength. Keep your knees tight to your chest, core braced, and breathe steadily. Avoid letting your hips drop or your gaze drift downward.",
             imageName: "tuck-planche-ground",
-            guide: "Track your hold time and add 1–2 seconds per week; increase difficulty by holding longer or beginning to push your hips backward. Loop a resistance band around your waist anchored above when you can't hold unassisted, and remove it once you hold cleanly for 3+ seconds.",
+            guide: "Track your hold time and add 1–2 seconds per week; increase difficulty by holding longer or beginning to push your hips backward. Loop a resistance band around your waist anchored above when you can't hold unassisted, and remove it once you hold cleanly for 6 seconds.",
             reps: reps,
             durationSeconds: durationSeconds,
             exerciseType: .timed,
@@ -824,7 +729,7 @@ extension SkillCatalog {
             name: "ADV Tuck Planche (Ground)",
             description: "Push your hips as far back as possible while keeping your back parallel to the floor — this flat spine is the defining form cue. Shoulders must be maximally protracted and arms locked straight. Avoid letting your hips rise above shoulder level or your lower back round.",
             imageName: "adv-tuck-planche-hold",
-            guide: "Track your hold time and add 1–2 seconds per week; increase difficulty by gradually pushing your hips further back toward a straddle. Loop a resistance band around your waist anchored above to reduce load when you can't hold the flat-back position.",
+            guide: "Track your hold time and add 1–2 seconds per week; increase difficulty by gradually pushing your hips further back toward a straddle.",
             reps: reps,
             durationSeconds: durationSeconds,
             exerciseType: .timed,
@@ -860,7 +765,7 @@ extension SkillCatalog {
             name: "Straddle Planche (Ground)",
             description: "Keep your shoulders maximally protracted and arms fully locked throughout — any elbow bend kills the hold. Breathe steadily and maintain tension in your core and glutes. Avoid letting your hips sag below shoulder level.",
             imageName: "straddle-planche-hold",
-            guide: "Track your hold time — even 1 extra second per week is excellent progress; increase difficulty by gradually bringing your legs closer together toward a full planche. Loop a resistance band around your waist anchored above to support your hips.",
+            guide: "Track your hold time — even 1 extra second per week is excellent progress; increase difficulty by gradually bringing your legs closer together toward a full planche.",
             reps: reps,
             durationSeconds: durationSeconds,
             exerciseType: .timed,
@@ -932,7 +837,6 @@ extension SkillCatalog {
             description: stage.description,
             imageName: stage.imageName,
             reps: "10s",
-            repsByDifficulty: [.starter: "10s", .standard: "10s", .solid: "10s"],
             durationSeconds: 10,
             exerciseType: .timed,
             guide: stage.guide,
@@ -948,10 +852,9 @@ extension SkillCatalog {
             description: "Keep your shoulders maximally protracted and arms fully locked throughout — any elbow bend kills the hold. Breathe steadily and maintain tension in your core and glutes. Avoid letting your hips sag below shoulder level.",
             imageName: "straddle-planche-hold",
             reps: "5s",
-            repsByDifficulty: [.starter: "5s", .standard: "5s", .solid: "5s"],
             durationSeconds: 5,
             exerciseType: .timed,
-            guide: "Track your hold time — even 1 extra second per week is excellent progress; increase difficulty by gradually bringing your legs closer together toward a full planche. Loop a resistance band around your waist anchored above to support your hips.",
+            guide: "Track your hold time — even 1 extra second per week is excellent progress; increase difficulty by gradually bringing your legs closer together toward a full planche.",
             sets: 3,
             summary: "An elite static hold with the body parallel to the ground and legs straddled wide. Targets the entire shoulder girdle, core, and glutes under near-maximum bodyweight load. Develops the extreme scapular protraction and body tension required for the full planche."
         )

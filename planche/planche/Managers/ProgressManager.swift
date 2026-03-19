@@ -9,10 +9,9 @@ struct ProgressManager {
     }
 
     func isSkillProgressComplete(_ skillID: String) -> Bool {
-        if let program = activeProgram(), program.skillID == skillID {
-            return program.isCompleted
-        }
-        return false
+        let descriptor = FetchDescriptor<ActiveProgram>()
+        guard let all = try? modelContext.fetch(descriptor) else { return false }
+        return all.contains(where: { $0.skillID == skillID && $0.isCompleted })
     }
 
     func isSkillRecommended(_ skillID: String) -> Bool {
@@ -89,11 +88,23 @@ struct ProgressManager {
 
     func activeProgram() -> ActiveProgram? {
         let descriptor = FetchDescriptor<ActiveProgram>()
-        return try? modelContext.fetch(descriptor).first
+        guard let all = try? modelContext.fetch(descriptor) else { return nil }
+        // Prefer the non-completed program (the one the user is currently working on)
+        return all.first(where: { !$0.isCompleted }) ?? all.last
     }
 
     func setActiveProgram(skill: Skill) {
-        if let existing = activeProgram() { modelContext.delete(existing) }
+        // Don't create a duplicate if this skill already has a record
+        let descriptor = FetchDescriptor<ActiveProgram>()
+        if let all = try? modelContext.fetch(descriptor),
+           all.contains(where: { $0.skillID == skill.id }) {
+            return
+        }
+        // Only delete the current active program if it's incomplete.
+        // Completed programs are preserved so their checkmarks remain visible.
+        if let existing = activeProgram(), !existing.isCompleted {
+            modelContext.delete(existing)
+        }
         let program = ActiveProgram(skill: skill)
         modelContext.insert(program)
         try? modelContext.save()

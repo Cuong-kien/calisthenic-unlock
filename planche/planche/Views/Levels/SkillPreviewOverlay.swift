@@ -184,7 +184,6 @@ struct SkillPreviewOverlay: View {
     // MARK: - Hero Image
 
     private static let skillPreviewImages: [String: String] = [
-        "foundation": "planche-lean",
         "foundation2": "frog-stand",
         "tuckPlanche": "tuck-parallettes",
         "advTuckPlanche": "preview-adv-tuck-planche",

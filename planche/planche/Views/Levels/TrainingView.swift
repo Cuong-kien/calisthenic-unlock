@@ -9,7 +9,6 @@ private enum TrainingPhase {
 
 struct TrainingView: View {
     let skill: Skill
-    var difficulty: Difficulty?
     @Environment(\.modelContext) private var modelContext
     @Environment(\.dismiss) private var dismiss
     @EnvironmentObject private var navigationState: NavigationState
@@ -178,7 +177,7 @@ struct TrainingView: View {
         }
         .sheet(item: $detailExercise) { exercise in
             NavigationStack {
-                ExerciseDetailView(exercise: exercise, difficulty: difficulty)
+                ExerciseDetailView(exercise: exercise)
             }
         }
         .sheet(isPresented: $showRestPicker) {
@@ -346,7 +345,7 @@ struct TrainingView: View {
 
             if currentExerciseStage != nil {
                 Text("To Failure")
-                    .font(.subheadline).fontWeight(.semibold)
+                    .font(.system(size: 17, weight: .semibold))
                     .foregroundStyle(Color.blue)
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
@@ -354,7 +353,7 @@ struct TrainingView: View {
 
             if let condition = currentExerciseStage?.nextStageCondition, !condition.isEmpty {
                 Text(condition)
-                    .font(.subheadline).foregroundStyle(Color.secondary)
+                    .font(.system(size: 17)).foregroundStyle(Color.secondary)
                     .fixedSize(horizontal: false, vertical: true)
                     .padding(.horizontal, 20)
                     .padding(.top, 4)
@@ -367,10 +366,10 @@ struct TrainingView: View {
                 Button { showStageProgress = true } label: {
                     HStack(spacing: 6) {
                         Text("progress:")
-                            .font(.subheadline)
+                            .font(.system(size: 17))
                             .foregroundStyle(Color(.secondaryLabel))
                         Text("\(value)")
-                            .font(.subheadline).fontWeight(.semibold)
+                            .font(.system(size: 17, weight: .semibold))
                             .foregroundStyle(.primary)
                         Image(systemName: "pencil")
                             .font(.system(size: 13))
@@ -394,7 +393,7 @@ struct TrainingView: View {
                         .font(.system(size: 64, weight: .bold, design: .monospaced))
                 } else {
                     let manager = CustomizationManager(modelContext: modelContext)
-                    Text(manager.effectiveDisplayText(for: exercise, difficulty: difficulty))
+                    Text(manager.effectiveDisplayText(for: exercise))
                         .font(.system(size: 64, weight: .bold, design: .monospaced))
                         .foregroundStyle(Color.blue)
                 }
@@ -483,7 +482,7 @@ struct TrainingView: View {
                             Spacer()
                             if isLastSet && !isStageExercise {
                                 let m = CustomizationManager(modelContext: modelContext)
-                                Text(m.effectiveDisplayText(for: next, difficulty: difficulty))
+                                Text(m.effectiveDisplayText(for: next))
                                     .font(.headline).fontWeight(.bold)
                             }
                         }
@@ -552,8 +551,7 @@ struct TrainingView: View {
         // Stages: no auto-timer — user taps "Take the Rest" / "Finish" manually
         if currentExerciseStage == nil, exercise.exerciseType == .timed {
             let manager = CustomizationManager(modelContext: modelContext)
-            let diff = exercise.skillID == "foundation" ? difficulty : nil
-            let duration = manager.effectiveDuration(for: exercise, difficulty: diff)
+            let duration = manager.effectiveDuration(for: exercise)
             totalPhaseTime = duration
             timeRemaining = duration
             startCountdownTimer()

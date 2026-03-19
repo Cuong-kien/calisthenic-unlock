@@ -1,6 +1,7 @@
 import Combine
 import SwiftUI
 import GoogleMobileAds
+import UserMessagingPlatform
 
 @MainActor
 final class AdManager: ObservableObject {
@@ -20,6 +21,7 @@ final class AdManager: ObservableObject {
 
     func preloadInterstitial() {
         guard interstitialAd == nil else { return }
+        guard ConsentInformation.shared.canRequestAds else { return }
         InterstitialAd.load(
             with: AdManager.interstitialAdUnitID
         ) { [weak self] ad, error in

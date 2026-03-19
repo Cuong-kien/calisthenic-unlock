@@ -14,7 +14,8 @@ struct AllLevelsView: View {
     }
 
     private var activeSkillID: String? {
-        activePrograms.first?.skillID
+        // Prefer the non-completed program (the one the user is currently working on)
+        (activePrograms.first(where: { !$0.isCompleted }) ?? activePrograms.last)?.skillID
     }
 
     private var completedSkillIDs: Set<String> {
@@ -33,14 +34,13 @@ struct AllLevelsView: View {
     }
 
     private var hasIncompleteActiveProgram: Bool {
-        guard let program = activePrograms.first else { return false }
-        return !program.isCompleted
+        activePrograms.contains(where: { !$0.isCompleted })
     }
 
     var body: some View {
         ScrollView {
             VStack(spacing: 0) {
-                Text("Process")
+                Text("Skill")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundStyle(.primary)
@@ -169,15 +169,24 @@ private struct SkillIcon: View {
     let skill: Skill
     let isActive: Bool
 
-    var body: some View {
-        let imageName = skill.skillIconImageName(active: isActive)
+    private static let skillPreviewImages: [String: String] = [
+        "foundation2": "frog-stand",
+        "tuckPlanche": "tuck-parallettes",
+        "advTuckPlanche": "preview-adv-tuck-planche",
+        "straddlePlanche": "straddle-planche-hold",
+        "fullPlanche": "full-planche"
+    ]
 
+    var body: some View {
         Group {
-            if let imageName {
-                Image(imageName)
+            if let previewImage = Self.skillPreviewImages[skill.id] {
+                Image(previewImage)
                     .resizable()
-                    .scaledToFit()
-                    .frame(width: 72, height: 72)
+                    .scaledToFill()
+                    .frame(width: 80, height: 60)
+                    .clipShape(RoundedRectangle(cornerRadius: 12))
+                    .grayscale(isActive ? 0 : 1)
+                    .opacity(isActive ? 1 : 0.6)
             } else {
                 ZStack {
                     Image(systemName: "hexagon.fill")

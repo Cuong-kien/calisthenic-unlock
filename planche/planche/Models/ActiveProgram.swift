@@ -4,7 +4,7 @@ import SwiftUI
 
 @Model
 final class ActiveProgram {
-    var skillID: String = "foundation"
+    var skillID: String = "foundation2"
     var groupID: String = "planche"
     var startDate: Date = Date()
     var currentProgressSeconds: Double = 0
@@ -24,7 +24,7 @@ final class ActiveProgram {
         self.isCompleted = false
     }
 
-    init(skillID: String = "foundation", groupID: String = "planche") {
+    init(skillID: String = "foundation2", groupID: String = "planche") {
         self.skillID = skillID
         self.groupID = groupID
         self.startDate = Date()

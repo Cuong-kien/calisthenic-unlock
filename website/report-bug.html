@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Report a Bug — Planche Fitness</title>
+  <meta name="description" content="Found a bug in Planche Fitness? Let us know and help us improve the app.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #035CD5;
+      --primary-light: #5EABF7;
+      --primary-glow: rgba(3, 92, 213, 0.4);
+      --gold: #F2C769;
+      --gold-glow: rgba(242, 199, 105, 0.3);
+      --bg-dark: #0A0E17;
+      --bg-section: #0F1520;
+      --bg-card: #151C2B;
+      --text-primary: #F1F5F9;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --border: rgba(255,255,255,0.08);
+      --font-heading: 'Barlow Condensed', sans-serif;
+      --font-body: 'Barlow', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-dark);
+      color: var(--text-primary);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    a { text-decoration: none; color: inherit; }
+    button { border: none; cursor: pointer; font-family: inherit; }
+
+    /* ── Navbar ── */
+    .navbar {
+      padding: 0 1.5rem;
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .navbar-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: 0.02em;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: var(--primary);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-icon svg { width: 20px; height: 20px; }
+    .nav-back {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text-primary); }
+    .nav-back svg { width: 18px; height: 18px; }
+
+    /* ── Main ── */
+    .page-main {
+      flex: 1;
+      padding: 3rem 1.5rem 4rem;
+    }
+    .page-inner {
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .page-header {
+      margin-bottom: 2.5rem;
+    }
+    .page-label {
+      font-family: var(--font-heading);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--gold);
+      margin-bottom: 0.75rem;
+    }
+    .page-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.75rem, 3vw, 2.5rem);
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+    }
+    .page-desc {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      max-width: 520px;
+    }
+
+    /* ── Form ── */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group:last-of-type {
+      margin-bottom: 0;
+    }
+    .form-label {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    .form-label .required {
+      color: var(--gold);
+      margin-left: 0.15rem;
+    }
+    .form-hint {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .form-input,
+    .form-select,
+    .form-textarea {
+      width: 100%;
+      background: var(--bg-dark);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.75rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      color: var(--text-primary);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input:focus,
+    .form-select:focus,
+    .form-textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(3, 92, 213, 0.2);
+    }
+    .form-input::placeholder,
+    .form-textarea::placeholder {
+      color: var(--text-muted);
+    }
+    .form-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%2364748B' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+      cursor: pointer;
+    }
+    .form-select option {
+      background: var(--bg-dark);
+      color: var(--text-primary);
+    }
+    .form-textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    /* File upload */
+    .file-upload {
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      padding: 1.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .file-upload:hover {
+      border-color: rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.02);
+    }
+    .file-upload-input {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .file-upload-icon {
+      width: 40px;
+      height: 40px;
+      margin: 0 auto 0.5rem;
+      border-radius: 10px;
+      background: rgba(3,92,213,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-light);
+    }
+    .file-upload-icon svg { width: 20px; height: 20px; }
+    .file-upload-text {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+    }
+    .file-upload-text span {
+      color: var(--primary-light);
+      font-weight: 600;
+    }
+    .file-upload-hint {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 0.3rem;
+    }
+    .file-list {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.4rem 0.6rem;
+      background: rgba(255,255,255,0.03);
+      border-radius: 8px;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+    }
+    .file-item-remove {
+      background: none;
+      color: var(--text-muted);
+      padding: 0.2rem;
+      border-radius: 4px;
+      transition: color 0.2s;
+    }
+    .file-item-remove:hover { color: var(--text-primary); }
+
+    /* Submit */
+    .form-actions {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .btn-submit {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--primary);
+      color: white;
+      padding: 0.8rem 1.75rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-submit:hover {
+      background: #0470F5;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px var(--primary-glow);
+    }
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+    .btn-submit svg { width: 18px; height: 18px; }
+    .form-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Success message */
+    .success-message {
+      display: none;
+      text-align: center;
+      padding: 3rem 2rem;
+    }
+    .success-message.show { display: block; }
+    .success-icon {
+      width: 64px; height: 64px;
+      margin: 0 auto 1.25rem;
+      border-radius: 50%;
+      background: rgba(3,92,213,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary-light);
+    }
+    .success-icon svg { width: 32px; height: 32px; }
+    .success-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .success-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--primary-light);
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: opacity 0.2s;
+    }
+    .btn-back:hover { opacity: 0.8; }
+    .btn-back svg { width: 16px; height: 16px; }
+
+    /* ── Footer ── */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 1.5rem;
+    }
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .footer-copy { color: var(--text-muted); font-size: 0.85rem; }
+    .footer-links { display: flex; gap: 1.5rem; }
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .footer-links a:hover { color: var(--text-primary); }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .form-row { grid-template-columns: 1fr; }
+      .form-card { padding: 1.5rem; }
+      .form-actions { flex-direction: column; align-items: stretch; }
+      .form-note { text-align: center; }
+      .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="12 2 22 8.5 22 15.5 12 22 2 15.5 2 8.5 12 2"/>
+            <line x1="12" y1="22" x2="12" y2="15.5"/>
+            <line x1="22" y1="8.5" x2="12" y2="15.5"/>
+            <line x1="2" y1="8.5" x2="12" y2="15.5"/>
+          </svg>
+        </div>
+        Planche
+      </a>
+      <a href="index.html" class="nav-back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        Back to Home
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main -->
+  <main class="page-main">
+    <div class="page-inner">
+      <div class="page-header">
+        <div class="page-label">Support</div>
+        <h1 class="page-title">Report a Bug</h1>
+        <p class="page-desc">Found something that doesn't work right? Help us squash it. Fill out the details below and we'll look into it.</p>
+      </div>
+
+      <div class="form-card" id="formCard">
+        <form id="bugForm" onsubmit="handleSubmit(event)">
+          <!-- Name & Email -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="name">Your Name</label>
+              <input class="form-input" type="text" id="name" name="name" placeholder="John Doe">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="email">Email<span class="required">*</span></label>
+              <input class="form-input" type="email" id="email" name="email" placeholder="john@example.com" required>
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label class="form-label" for="category">Bug Category<span class="required">*</span></label>
+            <select class="form-select" id="category" name="category" required>
+              <option value="" disabled selected>Select a category</option>
+              <option value="crash">App Crash</option>
+              <option value="training">Training / Workout Issue</option>
+              <option value="progress">Progress Tracking</option>
+              <option value="ui">UI / Display Problem</option>
+              <option value="navigation">Navigation Issue</option>
+              <option value="data">Data Loss / Sync</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- Device & iOS -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="device">Device</label>
+              <select class="form-select" id="device" name="device">
+                <option value="" disabled selected>Select device</option>
+                <option value="iphone-16">iPhone 16</option>
+                <option value="iphone-16-pro">iPhone 16 Pro</option>
+                <option value="iphone-16-pro-max">iPhone 16 Pro Max</option>
+                <option value="iphone-15">iPhone 15</option>
+                <option value="iphone-15-pro">iPhone 15 Pro</option>
+                <option value="iphone-14">iPhone 14</option>
+                <option value="iphone-se">iPhone SE</option>
+                <option value="ipad">iPad</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="ios-version">iOS Version</label>
+              <input class="form-input" type="text" id="ios-version" name="ios-version" placeholder="e.g. 18.3">
+            </div>
+          </div>
+
+          <!-- Summary -->
+          <div class="form-group">
+            <label class="form-label" for="summary">Bug Summary<span class="required">*</span></label>
+            <input class="form-input" type="text" id="summary" name="summary" placeholder="Brief description of the issue" required>
+          </div>
+
+          <!-- Steps to reproduce -->
+          <div class="form-group">
+            <label class="form-label" for="steps">Steps to Reproduce<span class="required">*</span></label>
+            <textarea class="form-textarea" id="steps" name="steps" placeholder="1. Go to...&#10;2. Tap on...&#10;3. Observe..." required></textarea>
+            <div class="form-hint">Describe exactly what you did before the bug appeared.</div>
+          </div>
+
+          <!-- Expected vs Actual -->
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="expected">Expected Behavior</label>
+              <textarea class="form-textarea" id="expected" name="expected" placeholder="What should happen?" style="min-height: 90px;"></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="actual">Actual Behavior</label>
+              <textarea class="form-textarea" id="actual" name="actual" placeholder="What actually happened?" style="min-height: 90px;"></textarea>
+            </div>
+          </div>
+
+          <!-- Screenshot upload -->
+          <div class="form-group">
+            <label class="form-label">Screenshots</label>
+            <div class="file-upload" id="fileUpload">
+              <input class="file-upload-input" type="file" id="screenshots" name="screenshots" accept="image/*" multiple onchange="handleFiles(this.files)">
+              <div class="file-upload-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              </div>
+              <div class="file-upload-text"><span>Click to upload</span> or drag and drop</div>
+              <div class="file-upload-hint">PNG, JPG up to 5MB each</div>
+            </div>
+            <div class="file-list" id="fileList"></div>
+          </div>
+
+          <!-- Submit -->
+          <div class="form-actions">
+            <button class="btn-submit" type="submit" id="submitBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              Submit Report
+            </button>
+            <span class="form-note">We'll review your report and follow up via email.</span>
+          </div>
+        </form>
+
+        <!-- Success State -->
+        <div class="success-message" id="successMessage">
+          <div class="success-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h2 class="success-title">Report Submitted</h2>
+          <p class="success-desc">Thanks for helping us improve Planche. We'll investigate this bug and get back to you if we need more details.</p>
+          <a href="index.html" class="btn-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+            Back to Home
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-copy">&copy; 2026 Planche Fitness. All rights reserved.</div>
+      <div class="footer-links">
+        <a href="index.html">Home</a>
+        <a href="report-bug.html">Report Bug</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let uploadedFiles = [];
+
+    function handleFiles(files) {
+      for (const file of files) {
+        if (file.size > 5 * 1024 * 1024) continue;
+        if (!file.type.startsWith('image/')) continue;
+        if (uploadedFiles.length >= 5) break;
+        uploadedFiles.push(file);
+      }
+      renderFileList();
+    }
+
+    function removeFile(index) {
+      uploadedFiles.splice(index, 1);
+      renderFileList();
+    }
+
+    function renderFileList() {
+      const list = document.getElementById('fileList');
+      if (uploadedFiles.length === 0) {
+        list.innerHTML = '';
+        return;
+      }
+      list.innerHTML = uploadedFiles.map((f, i) => `
+        <div class="file-item">
+          <span>${f.name} (${(f.size / 1024).toFixed(0)} KB)</span>
+          <button type="button" class="file-item-remove" onclick="removeFile(${i})" aria-label="Remove file">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // Drag & drop
+    const dropZone = document.getElementById('fileUpload');
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'var(--primary-light)';
+      dropZone.style.background = 'rgba(3,92,213,0.05)';
+    });
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.style.borderColor = '';
+      dropZone.style.background = '';
+    });
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '';
+      dropZone.style.background = '';
+      handleFiles(e.dataTransfer.files);
+    });
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="animation: spin 1s linear infinite"><circle cx="12" cy="12" r="10" stroke-dasharray="32" stroke-dashoffset="32"/></svg>
+        Submitting...
+      `;
+
+      // Simulate submission
+      setTimeout(() => {
+        document.getElementById('bugForm').style.display = 'none';
+        document.getElementById('successMessage').classList.add('show');
+      }, 1500);
+    }
+  </script>
+  <style>
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</body>
+</html>

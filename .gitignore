@@ -1,5 +1,8 @@
 # macOS
 .DS_Store
+._*
+.Spotlight-V100
+.Trashes
 
 # Xcode user data
 xcuserdata/
@@ -9,6 +12,17 @@ xcuserdata/
 # Build artifacts
 DerivedData/
 build/
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Swift Package Manager
+.build/
+.swiftpm/
+*.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/configuration/
+
+# CocoaPods
+Pods/
 
 # Claude
 .claude/
@@ -16,5 +30,10 @@ build/
 # Wireframe reference images (large files, not source)
 wireframe/
 
-# Nested stale xcodeproj (real one is at root: planche.xcodeproj)
-planche/planche.xcodeproj/
+# Stale root-level xcodeproj (real one is at planche/planche.xcodeproj)
+/planche.xcodeproj/
+
+# Misc
+*.playground/
+*.hmap
+*.log

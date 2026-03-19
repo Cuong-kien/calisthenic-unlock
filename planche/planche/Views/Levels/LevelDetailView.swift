@@ -6,7 +6,6 @@ struct LevelDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @EnvironmentObject private var storeManager: StoreManager
     @Query private var customizations: [ExerciseCustomization]
-    @State private var selectedDifficulty: Difficulty = .standard
     @State private var selectedExercise: Exercise? = nil
     @State private var showPaywall = false
 
@@ -165,10 +164,7 @@ struct LevelDetailView: View {
             }
         }
         .sheet(item: $selectedExercise) { exercise in
-            ExerciseDetailView(
-                exercise: exercise,
-                difficulty: skill.id == "foundation" ? selectedDifficulty : nil
-            )
+            ExerciseDetailView(exercise: exercise)
         }
     }
 
@@ -218,13 +214,9 @@ struct LevelDetailView: View {
             return "\(stages.count) stages / \(exercise.sets) sets"
         }
 
-        let diff: Difficulty? = skill.id == "foundation" ? selectedDifficulty : nil
-        let lookupDiff = exercise.skillID == "foundation" ? diff : nil
-
         let custom = customizations.first {
             $0.exerciseName == exercise.name &&
-            $0.skillID == exercise.skillID &&
-            $0.difficultyRawValue == lookupDiff?.rawValue
+            $0.skillID == exercise.skillID
         }
 
         let setsLabel = "× \(exercise.sets) sets"
@@ -232,9 +224,6 @@ struct LevelDetailView: View {
             let secs: Int
             if let customSecs = custom?.customDurationSeconds {
                 secs = customSecs
-            } else if let diff, exercise.skillID == "foundation" {
-                let text = exercise.reps(for: diff).trimmingCharacters(in: .whitespaces).lowercased()
-                secs = (text.hasSuffix("s") ? Int(text.dropLast()) : nil) ?? exercise.durationSeconds
             } else {
                 secs = exercise.durationSeconds
             }
@@ -245,7 +234,6 @@ struct LevelDetailView: View {
         } else {
             let repsLabel: String
             if let reps = custom?.customReps { repsLabel = "\(reps) rep" }
-            else if let diff, exercise.skillID == "foundation" { repsLabel = exercise.reps(for: diff) }
             else { repsLabel = exercise.reps }
             return "\(repsLabel) \(setsLabel)"
         }
@@ -261,7 +249,7 @@ struct LevelDetailView: View {
                     primaryButtonLabel("Upgrade to Unlock")
                 }
             } else {
-                NavigationLink(value: AppRoute.training(skill, difficulty: skill.id == "foundation" ? selectedDifficulty : nil)) {
+                NavigationLink(value: AppRoute.training(skill)) {
                     primaryButtonLabel("Start Training")
                 }
             }

@@ -1,5 +1,6 @@
 import SwiftUI
 import SwiftData
+import UserMessagingPlatform
 
 // MARK: - Schema Versions
 
@@ -148,7 +149,7 @@ struct plancheApp: App {
                 .environmentObject(adManager)
                 .task { await storeManager.checkSubscriptionStatus() }
                 .task {
-                    if !storeManager.isSubscribed {
+                    if !storeManager.isSubscribed && ConsentInformation.shared.canRequestAds {
                         adManager.preloadInterstitial()
                     }
                 }

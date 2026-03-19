@@ -14,7 +14,7 @@ final class NavigationState: ObservableObject {
 
 enum AppRoute: Hashable {
     case skillDetail(Skill)
-    case training(Skill, difficulty: Difficulty?)
+    case training(Skill)
 }
 
 // MARK: - Main Tab View
@@ -81,8 +81,8 @@ struct MainTabView: View {
         switch route {
         case .skillDetail(let skill):
             LevelDetailView(skill: skill)
-        case .training(let skill, let difficulty):
-            TrainingView(skill: skill, difficulty: difficulty)
+        case .training(let skill):
+            TrainingView(skill: skill)
         }
     }
 }

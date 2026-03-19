@@ -12,7 +12,7 @@ struct HomeView: View {
     }
 
     private var activeProgram: ActiveProgram? {
-        activePrograms.first
+        activePrograms.first(where: { !$0.isCompleted }) ?? activePrograms.last
     }
 
     private var greetingText: String {
@@ -165,7 +165,6 @@ struct ActiveProgramCard: View {
     let skill: Skill
 
     private static let skillPreviewImages: [String: String] = [
-        "foundation": "planche-lean",
         "foundation2": "frog-stand",
         "tuckPlanche": "tuck-parallettes",
         "advTuckPlanche": "preview-adv-tuck-planche",

@@ -3,7 +3,6 @@ import SwiftData
 
 struct ExerciseDetailView: View {
     let exercise: Exercise
-    var difficulty: Difficulty? = nil
     var isLevelLocked: Bool = false
 
     @Environment(\.modelContext) private var modelContext
@@ -16,30 +15,10 @@ struct ExerciseDetailView: View {
         exercise.stages?[selectedStageIndex]
     }
 
-    private var isCustomizable: Bool {
-        if exercise.skillID == "foundation" {
-            return difficulty == .solid
-        }
-        return true
-    }
-
     private var minimumValue: Int {
         if exercise.exerciseType == .timed {
-            if let diff = difficulty, exercise.skillID == "foundation" {
-                let text = exercise.reps(for: diff).trimmingCharacters(in: .whitespaces).lowercased()
-                if text.hasSuffix("s"), let val = Int(text.dropLast()) {
-                    return val
-                }
-            }
             return exercise.durationSeconds
         } else {
-            if let diff = difficulty, exercise.skillID == "foundation" {
-                let text = exercise.reps(for: diff)
-                let parts = text.split(separator: " ")
-                if let first = parts.first, let val = Int(first) {
-                    return val
-                }
-            }
             let parts = exercise.reps.split(separator: " ")
             if let first = parts.first, let val = Int(first) {
                 return val
@@ -53,7 +32,7 @@ struct ExerciseDetailView: View {
     }
 
     private var stepValue: Int {
-        exercise.exerciseType == .timed ? 5 : 1
+        1
     }
 
     private var displayValue: String {
@@ -67,13 +46,6 @@ struct ExerciseDetailView: View {
 
     private var typeLabel: String {
         exercise.exerciseType == .timed ? "DURATION (SECONDS)" : "REPS"
-    }
-
-    private var staticRepsText: String {
-        if let diff = difficulty, exercise.skillID == "foundation" {
-            return exercise.reps(for: diff)
-        }
-        return exercise.reps
     }
 
     @ViewBuilder
@@ -192,61 +164,48 @@ struct ExerciseDetailView: View {
                         exerciseImageView
 
                         VStack(alignment: .leading, spacing: 24) {
-                            if isCustomizable {
-                                HStack {
-                                    Text(typeLabel)
-                                        .font(.subheadline)
-                                        .fontWeight(.bold)
-                                        .foregroundStyle(.blue)
+                            HStack {
+                                Text(typeLabel)
+                                    .font(.subheadline)
+                                    .fontWeight(.bold)
+                                    .foregroundStyle(.blue)
 
-                                    Spacer()
+                                Spacer()
 
-                                    HStack(spacing: 12) {
-                                        Button {
-                                            decrementValue()
-                                        } label: {
-                                            Image(systemName: "minus")
-                                                .font(.body.weight(.bold))
-                                                .foregroundStyle(.white)
-                                                .frame(width: 36, height: 36)
-                                                .background(Color(.systemGray3))
-                                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                        }
-                                        .disabled(currentValue <= minimumValue)
-                                        .opacity(!isLevelLocked && currentValue <= minimumValue ? 0.4 : 1)
-
-                                        Text(displayValue)
-                                            .font(.body)
-                                            .fontWeight(.semibold)
-                                            .monospacedDigit()
-                                            .frame(minWidth: 50)
-
-                                        Button {
-                                            incrementValue()
-                                        } label: {
-                                            Image(systemName: "plus")
-                                                .font(.body.weight(.bold))
-                                                .foregroundStyle(.white)
-                                                .frame(width: 36, height: 36)
-                                                .background(Color(.systemGray3))
-                                                .clipShape(RoundedRectangle(cornerRadius: 8))
-                                        }
-                                        .disabled(maximumValue.map { currentValue >= $0 } ?? false)
-                                        .opacity(maximumValue.map { currentValue >= $0 ? 0.4 : 1.0 } ?? 1.0)
+                                HStack(spacing: 12) {
+                                    Button {
+                                        decrementValue()
+                                    } label: {
+                                        Image(systemName: "minus")
+                                            .font(.body.weight(.bold))
+                                            .foregroundStyle(.white)
+                                            .frame(width: 36, height: 36)
+                                            .background(Color(.systemGray3))
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
                                     }
-                                    .disabled(isLevelLocked)
-                                }
-                            } else {
-                                HStack {
-                                    Text(typeLabel)
-                                        .font(.subheadline)
-                                        .fontWeight(.bold)
-                                        .foregroundStyle(.blue)
-                                    Spacer()
-                                    Text(staticRepsText)
+                                    .disabled(currentValue <= minimumValue)
+                                    .opacity(!isLevelLocked && currentValue <= minimumValue ? 0.4 : 1)
+
+                                    Text(displayValue)
                                         .font(.body)
                                         .fontWeight(.semibold)
+                                        .monospacedDigit()
+                                        .frame(minWidth: 50)
+
+                                    Button {
+                                        incrementValue()
+                                    } label: {
+                                        Image(systemName: "plus")
+                                            .font(.body.weight(.bold))
+                                            .foregroundStyle(.white)
+                                            .frame(width: 36, height: 36)
+                                            .background(Color(.systemGray3))
+                                            .clipShape(RoundedRectangle(cornerRadius: 8))
+                                    }
+                                    .disabled(maximumValue.map { currentValue >= $0 } ?? false)
+                                    .opacity(maximumValue.map { currentValue >= $0 ? 0.4 : 1.0 } ?? 1.0)
                                 }
+                                .disabled(isLevelLocked)
                             }
 
                             if !exercise.summary.isEmpty {
@@ -359,9 +318,9 @@ struct ExerciseDetailView: View {
     private func loadCurrentValue() {
         let manager = CustomizationManager(modelContext: modelContext)
         if exercise.exerciseType == .timed {
-            currentValue = manager.effectiveDuration(for: exercise, difficulty: difficulty)
+            currentValue = manager.effectiveDuration(for: exercise)
         } else {
-            let repsText = manager.effectiveReps(for: exercise, difficulty: difficulty)
+            let repsText = manager.effectiveReps(for: exercise)
             currentValue = manager.parseReps(from: repsText) ?? 10
         }
     }
@@ -382,19 +341,16 @@ struct ExerciseDetailView: View {
 
     private func saveCustomValue() {
         let manager = CustomizationManager(modelContext: modelContext)
-        let diff = exercise.skillID == "foundation" ? difficulty : nil
         if exercise.exerciseType == .timed {
             manager.setCustomValue(
                 for: exercise.name,
                 skillID: exercise.skillID,
-                difficulty: diff,
                 durationSeconds: currentValue
             )
         } else {
             manager.setCustomValue(
                 for: exercise.name,
                 skillID: exercise.skillID,
-                difficulty: diff,
                 reps: currentValue
             )
         }
